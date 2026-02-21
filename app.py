@@ -157,6 +157,26 @@ def delete_room():
     conn.close()
     return redirect(url_for('dashboard'))
 
+# ── Cleaning Department Portal ──────────────────────────────────────────────
+@app.route('/cleaning')
+def cleaning():
+    if not is_logged_in():
+        return redirect(url_for('login'))
+        
+    conn = get_db_connection()
+    # Pulling all rooms so cleaning staff can see status
+    rooms = conn.execute('SELECT * FROM room_status').fetchall()
+    conn.close()
+    return render_template('cleaning.html', rooms=rooms)
+
+# ── Premises Management Portal ──────────────────────────────────────────────
+@app.route('/premises')
+def premises_mgmt():
+    if not is_logged_in():
+        return redirect(url_for('login'))
+        
+    return render_template('premises_management.html')
+
 # ── Execution ──────────────────────────────────────────────────────────────
 # PythonAnywhere uses the 'application' variable in the WSGI file.
 # This block allows you to still test locally by running 'python app.py'.
