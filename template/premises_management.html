@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Premises Management | G.M.T. Sorabora Staff</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Shared variables with Room Management for consistency */
+        :root {
+            --primary: #0a3d2e; --accent: #c9a96e; --bg: #f8f5f0; --text: #1a1612;
+            --muted: #8a7968; --card: #ffffff; --border: rgba(0,0,0,0.08);
+            --success: #16a34a; --danger: #dc2626; --warning: #d97706;
+        }
+        [data-theme="dark"] {
+            --bg: #0e0c09; --text: #f0ebe3; --muted: #6b5f50; --card: #1a1612; --border: rgba(255,255,255,0.07);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; transition: background 0.3s; }
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; }
+
+        /* ── SIDEBAR (Matches Room Mgmt) ── */
+        .sidebar { width: 220px; background: var(--primary); color: white; position: fixed; top: 0; bottom: 0; display: flex; flex-direction: column; z-index: 100; }
+        .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo-name { font-size: 1.15rem; font-weight: 600; }
+        .sidebar-portal { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); }
+        .nav-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.8rem 1.25rem; font-size: 0.78rem; color: rgba(255,255,255,0.6); text-decoration: none; transition: 0.2s; border: none; background: none; width: 100%; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { color: white; background: rgba(255,255,255,0.06); }
+        .nav-item.active { border-right: 3px solid var(--accent); background: rgba(201,169,110,0.1); }
+
+        /* ── MAIN CONTENT ── */
+        .main { margin-left: 220px; flex: 1; padding: 2rem; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        
+        /* ── PREMISES CARDS ── */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 1.5rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        
+        /* ── STATUS INDICATORS ── */
+        .status-pill { padding: 0.2rem 0.6rem; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 2px; font-weight: 500; }
+        .status-ok { background: rgba(22,163,74,0.1); color: var(--success); }
+        .status-issue { background: rgba(220,38,38,0.1); color: var(--danger); }
+
+        /* ── INVENTORY LIST ── */
+        .list-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .list-item:last-child { border-bottom: none; }
+        .stock-count { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; }
+        .low-stock { color: var(--danger); font-weight: bold; }
+
+        .btn-action { background: var(--accent); color: #1a1612; border: none; padding: 0.6rem 1rem; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: 0.3s; }
+        .btn-action:hover { background: #d4b87a; }
+
+        @media (max-width: 800px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="sidebar-logo-name">GMT <span>Sorabora</span></div>
+        <div class="sidebar-portal">Premises Admin</div>
+    </div>
+    <nav style="padding: 1rem 0;">
+        <a href="/dashboard" class="nav-item">🛏 Room Management</a>
+        <a href="/premises_management" class="nav-item active">🏛 Premises & Stock</a>
+        <a href="/staff" class="nav-item">👥 Staff Directory</a>
+    </nav>
+</aside>
+
+<main class="main">
+    <div class="topbar">
+        <h1>Premises Overview</h1>
+        <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; color:var(--text); font-size:1.2rem;">🌙</button>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Maintenance Log</h3>
+                <span class="status-pill status-issue">2 Pending</span>
+            </div>
+            <div class="list-item">
+                <span>Pool Pump Filter</span>
+                <span style="color:var(--warning)">Pending</span>
+            </div>
+            <div class="list-item">
+                <span>Garden Pathway Lights</span>
+                <span style="color:var(--danger)">Urgent</span>
+            </div>
+            <div class="list-item">
+                <span>Main Generator Check</span>
+                <span style="color:var(--success)">Completed</span>
+            </div>
+            <button class="btn-action" style="margin-top:1rem; width:100%;">+ Log New Issue</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Stock Levels</h3>
+                <span class="status-pill status-ok">Stable</span>
+            </div>
+            <div class="list-item">
+                <span>Hand-woven Linens</span>
+                <span class="stock-count">42</span>
+            </div>
+            <div class="list-item">
+                <span>Artisanal Soaps</span>
+                <span class="stock-count low-stock">08</span>
+            </div>
+            <div class="list-item">
+                <span>Tea & Spices (Kitchen)</span>
+                <span class="stock-count">115</span>
+            </div>
+            <button class="btn-action" style="margin-top:1rem; width:100%;">Update Inventory</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Utility Monitoring</h3>
+                <span class="status-pill status-ok">Connected</span>
+            </div>
+            <div class="list-item">
+                <span>Solar Battery Charge</span>
+                <span class="stock-count" style="color:var(--success)">88%</span>
+            </div>
+            <div class="list-item">
+                <span>Water Reservoir</span>
+                <span class="stock-count">Full</span>
+            </div>
+            <button class="btn-action" style="margin-top:1rem; width:100%;">View Usage Reports</button>
+        </div>
+        <div class="sidebar-footer" style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+    <a href="/logout" class="nav-item" style="color: #ff6b6b; font-size: 0.7rem;">🚪 Log Out</a>
+</div>
+    </div>
+</main>
+
+<script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+</script>
+
+</body>
+</html>

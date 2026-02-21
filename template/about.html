@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Our Story | G.M.T. Sorabora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The story behind G.M.T. Sorabora – a family-run lakefront retreat in Mahiyanganaya, Sri Lanka.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0a3d2e; --accent: #c9a96e; --bg: #f8f5f0; --text: #1a1612; --muted: #8a7968; --card: #ffffff; }
+        [data-theme="dark"] { --primary: #1a6b50; --accent: #c9a96e; --bg: #0e0c09; --text: #f0ebe3; --muted: #6b5f50; --card: #1a1612; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); transition: background-color 0.4s, color 0.4s; }
+        h1, h2, h3, h4, blockquote { font-family: 'Cormorant Garamond', serif; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 20px rgba(0,0,0,0.04); }
+        [data-theme="dark"] nav { border-color: rgba(255,255,255,0.06); }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .nav-logo span { font-weight: 300; opacity: 0.55; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .theme-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        [data-theme="dark"] .theme-btn { border-color: rgba(255,255,255,0.2); }
+        .book-btn { background: var(--accent); color: #1a1612; border: none; padding: 0.6rem 1.5rem; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.3s; }
+        .book-btn:hover { background: #d4b87a; }
+
+        /* PAGE HERO */
+        .page-hero {
+            height: 60vh; min-height: 450px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.65)),
+                        url('https://picsum.photos/seed/lake2/1920/800') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: white; padding: 2rem;
+        }
+        .page-eyebrow { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; animation: fadeUp 1s ease 0.3s both; }
+        .page-hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; animation: fadeUp 1s ease 0.5s both; }
+
+        /* CONTENT */
+        .story-section { max-width: 820px; margin: 0 auto; padding: 6rem 2rem; }
+        .story-lead { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; font-style: italic; line-height: 1.5; color: var(--text); margin-bottom: 3rem; }
+        .story-body p { font-size: 0.9rem; color: var(--muted); line-height: 2; margin-bottom: 1.5rem; }
+
+        .divider { width: 60px; height: 1px; background: var(--accent); margin: 3rem 0; }
+
+        blockquote { font-size: 1.8rem; font-weight: 300; font-style: italic; color: var(--text); line-height: 1.5; padding-left: 2rem; border-left: 3px solid var(--accent); margin: 3rem 0; }
+        blockquote cite { display: block; font-style: normal; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 0.25em; color: var(--muted); margin-top: 1rem; }
+
+        /* VALUES GRID */
+        .values-section { padding: 6rem 4rem; background: var(--primary); color: white; }
+        .values-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .values-section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; margin-bottom: 3rem; }
+        .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .value-card { padding: 2.5rem; border: 1px solid rgba(255,255,255,0.1); }
+        .value-icon { font-size: 1.5rem; margin-bottom: 1.25rem; }
+        .value-card h4 { font-size: 1.3rem; font-weight: 400; margin-bottom: 0.75rem; color: white; }
+        .value-card p { font-size: 0.8rem; opacity: 0.6; line-height: 1.9; }
+
+        /* TIMELINE */
+        .timeline-section { padding: 6rem 4rem; max-width: 900px; margin: 0 auto; }
+        .timeline-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .timeline-section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; margin-bottom: 3rem; }
+        .timeline { position: relative; padding-left: 2rem; border-left: 1px solid rgba(0,0,0,0.1); }
+        [data-theme="dark"] .timeline { border-color: rgba(255,255,255,0.1); }
+        .timeline-item { position: relative; margin-bottom: 3rem; }
+        .timeline-dot { position: absolute; left: -2.375rem; top: 0.3rem; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+        .timeline-year { font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent); margin-bottom: 0.4rem; }
+        .timeline-item h4 { font-size: 1.2rem; font-weight: 500; margin-bottom: 0.5rem; }
+        .timeline-item p { font-size: 0.82rem; color: var(--muted); line-height: 1.9; }
+
+        /* TEAM */
+        .team-section { padding: 6rem 4rem; background: var(--card); }
+        [data-theme="dark"] .team-section { background: #120f0b; }
+        .team-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .team-section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; margin-bottom: 3rem; }
+        .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .team-card img { width: 100%; height: 280px; object-fit: cover; display: block; filter: grayscale(20%); transition: filter 0.4s; }
+        .team-card:hover img { filter: grayscale(0%); }
+        .team-card-body { padding: 1.25rem 0; }
+        .team-card-body h4 { font-size: 1.2rem; font-weight: 400; }
+        .team-card-body p { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); margin-top: 0.25rem; }
+
+        /* CTA */
+        .cta-strip { text-align: center; padding: 6rem 2rem; background: var(--bg); }
+        .cta-strip h2 { font-size: 2.5rem; font-weight: 300; margin-bottom: 1rem; }
+        .cta-strip p { font-size: 0.88rem; color: var(--muted); margin-bottom: 2.5rem; }
+        .btn-primary { background: var(--accent); color: #1a1612; border: none; padding: 1rem 2.5rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block; }
+        .btn-primary:hover { background: #d4b87a; transform: translateY(-2px); }
+
+        footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 4rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
+        .footer-brand h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; margin-bottom: 1rem; }
+        .footer-brand p { font-size: 0.8rem; line-height: 1.9; max-width: 280px; }
+        .footer-col h4 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 1.25rem; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .footer-col ul a { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.3s; }
+        .footer-col ul a:hover { color: var(--accent); }
+        .footer-bottom { background: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .story-section { padding: 4rem 1.5rem; }
+            .values-section { padding: 4rem 1.5rem; }
+            .values-grid { grid-template-columns: 1fr; }
+            .timeline-section { padding: 4rem 1.5rem; }
+            .team-section { padding: 4rem 1.5rem; }
+            .team-grid { grid-template-columns: 1fr; }
+            footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+            .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">GMT <span>Sorabora</span></a>
+    <ul class="nav-links">
+        <li><a href="/rooms">Rooms</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/about" class="active">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="book-btn" onclick="window.location.href='/booking'">Book Now</button>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <p class="page-eyebrow">Our Story</p>
+    <h1>Built Beside<br><em style="color: var(--accent);">the Ancient Lake</em></h1>
+</div>
+
+<section class="story-section">
+    <p class="story-lead reveal">"We didn't build a hotel. We built a home — and then opened the door."</p>
+    <div class="story-body">
+        <p class="reveal">G.M.T. Sorabora began as a dream held by one family: to share the quiet majesty of Sorabora Wewa with travellers willing to slow down and truly see Sri Lanka. Not the curated, hurried Sri Lanka of tourist trails — but the real one. The one that moves at the pace of the water.</p>
+        <p class="reveal">The villa was carefully designed to sit lightly on the land. Local craftsmen shaped every beam and tile. Gardens were planted with native species that the land already knew. The kitchen sources from farmers in the surrounding villages of Mahiyanganaya.</p>
+        <div class="divider reveal"></div>
+        <p class="reveal">Sorabora Wewa — the lake you see from every room — is no ordinary reservoir. According to legend, it was built by Dunu, a brilliant engineer-slave, thousands of years ago without the knowledge of writing or formal tools. It still irrigates the land today. We carry that spirit of honest, purposeful craft in everything we do.</p>
+        <p class="reveal">Our guests are not guests so much as they are house friends — people who come for a night and leave with a piece of the lake inside them. We measure our success not in occupancy rates, but in the number of people who return.</p>
+        <blockquote class="reveal">
+            "The lake does not rush. It simply holds the sky, reflects the world, and remains."
+            <cite>— A guest's note, left at departure</cite>
+        </blockquote>
+    </div>
+</section>
+
+<!-- VALUES -->
+<div class="values-section">
+    <p class="values-eyebrow reveal">What We Stand For</p>
+    <h2 class="reveal">Our Three Pillars</h2>
+    <div class="values-grid">
+        <div class="value-card reveal">
+            <div class="value-icon">🌿</div>
+            <h4>Rooted in Place</h4>
+            <p>Everything here comes from here. Our materials, our food, our staff, and our soul are all Sri Lankan. We do not import luxury — we reveal it.</p>
+        </div>
+        <div class="value-card reveal">
+            <div class="value-icon">🤝</div>
+            <h4>Honest Hospitality</h4>
+            <p>We are a family, not a corporation. When you arrive, you are welcomed by a person, not a process. Your name is remembered. Your preference matters.</p>
+        </div>
+        <div class="value-card reveal">
+            <div class="value-icon">🌱</div>
+            <h4>Light on the Land</h4>
+            <p>Solar-assisted power, rainwater harvesting, compost gardens, and zero single-use plastics. We believe the lake deserves clean water around it.</p>
+        </div>
+    </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-section">
+    <p class="timeline-eyebrow reveal">Our Journey</p>
+    <h2 class="reveal">A History of the Villa</h2>
+    <div class="timeline">
+        <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2010</div>
+            <h4>The Land is Found</h4>
+            <p>The Gunawardena family discovers a plot beside the lake — overgrown, overlooked, and perfect. A decision is made quietly.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2013</div>
+            <h4>Construction Begins</h4>
+            <p>Local craftsmen break ground. Reclaimed timber, traditional brick, and an architect who listens more than he draws.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2015</div>
+            <h4>First Guests Arrive</h4>
+            <p>The doors open quietly. Word travels slowly at first — then gathers like the lake at monsoon. Reviews appear. Guests return.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2019</div>
+            <h4>Garden Villa Added</h4>
+            <p>A new structure is added — deeper into the garden, more secluded. For those who want to fully disappear.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2024</div>
+            <h4>4 Booking.com Reviews · 8.6 Excellent</h4>
+            <p>Rated Excellent on Booking.com with a 9.6/10 for service. Guests praise the rice fields, wildlife, peacocks, and the warm, attentive staff. The lake and the welcome remain unchanged.</p>
+        </div>
+    </div>
+</div>
+
+<!-- TEAM -->
+<div class="team-section">
+    <p class="team-eyebrow reveal">The People</p>
+    <h2 class="reveal">The Faces Behind the Villa</h2>
+    <div class="team-grid">
+        <div class="team-card reveal">
+            <img src="https://picsum.photos/seed/person1/400/400" alt="G.M.T. Gunawardena">
+            <div class="team-card-body">
+                <h4>G.M.T. Gunawardena</h4>
+                <p>Founder & Host</p>
+            </div>
+        </div>
+        <div class="team-card reveal">
+            <img src="https://picsum.photos/seed/person2/400/400" alt="Dilini Gunawardena">
+            <div class="team-card-body">
+                <h4>Dilini Gunawardena</h4>
+                <p>Head of Hospitality</p>
+            </div>
+        </div>
+        <div class="team-card reveal">
+            <img src="https://picsum.photos/seed/person3/400/400" alt="Chaminda Silva">
+            <div class="team-card-body">
+                <h4>Chaminda Silva</h4>
+                <p>Head Chef</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-strip">
+    <h2 class="reveal">Come and See for Yourself</h2>
+    <p class="reveal">The best stories about this place are the ones you'll bring home.</p>
+    <a href="/booking" class="btn-primary reveal">Reserve Your Stay</a>
+</div>
+
+<footer>
+    <div class="footer-brand">
+        <h3>GMT Sorabora</h3>
+        <p>A 12-room lakefront hotel on Sorabora Lake Road, Mahiyanganaya. Outdoor pool, free breakfast, and rated Excellent on Booking.com.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+            <li><a href="/rooms">Rooms & Suites</a></li>
+            <li><a href="/gallery">Gallery</a></li>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+            <li><a href="#">Sorabora Lake Road, Mahiyanganaya, UP 90700</a></li>
+            <li><a href="tel:+94712345678">+94 71 234 5678</a></li>
+            <li><a href="/cdn-cgi/l/email-protection#11787f777e51767c65627e6370737e63703f727e7c"><span class="__cf_email__" data-cfemail="21484f474e61464c55524e5340434e53400f424e4c">[email&#160;protected]</span></a></li>
+        </ul>
+    </div>
+</footer>
+<div class="footer-bottom">
+    <p>© 2025 G.M.T. Sorabora. All rights reserved.</p>
+    <p>Designed by <strong style="color: rgba(255,255,255,0.5);">Typix Studio</strong></p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').textContent = '☀️'; }
+    const revealAll = () => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+                el.classList.add('active');
+            }
+        });
+    };
+    window.addEventListener('scroll', revealAll, { passive: true });
+    revealAll();
+
+</script>
+</body>
+</html>

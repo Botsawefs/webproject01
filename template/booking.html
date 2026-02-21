@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Your Stay | G.M.T. Sorabora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book your stay at G.M.T. Sorabora lakefront villa in Mahiyanganaya, Sri Lanka.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0a3d2e; --accent: #c9a96e; --bg: #f8f5f0; --text: #1a1612; --muted: #8a7968; --card: #ffffff; }
+        [data-theme="dark"] { --primary: #1a6b50; --accent: #c9a96e; --bg: #0e0c09; --text: #f0ebe3; --muted: #6b5f50; --card: #1a1612; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); transition: background-color 0.4s, color 0.4s; }
+        h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 20px rgba(0,0,0,0.04); }
+        [data-theme="dark"] nav { border-color: rgba(255,255,255,0.06); }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .nav-logo span { font-weight: 300; opacity: 0.55; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .theme-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        [data-theme="dark"] .theme-btn { border-color: rgba(255,255,255,0.2); }
+
+        /* LAYOUT */
+        .booking-layout { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+        .booking-visual {
+            background: linear-gradient(to bottom, rgba(10,61,46,0.5), rgba(10,61,46,0.8)),
+                        url('https://picsum.photos/seed/lake1/1920/1080') center/cover no-repeat;
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem;
+            color: white; position: sticky; top: 0; height: 100vh;
+        }
+        .booking-visual-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .booking-visual h2 { font-size: 2.8rem; font-weight: 300; line-height: 1.15; margin-bottom: 1rem; }
+        .booking-visual p { font-size: 0.85rem; opacity: 0.65; line-height: 1.9; margin-bottom: 2rem; }
+        .trust-items { display: flex; flex-direction: column; gap: 0.75rem; }
+        .trust-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.78rem; opacity: 0.75; }
+        .trust-icon { font-size: 1rem; }
+
+        .booking-form-side { padding: 8rem 4rem 4rem; background: var(--bg); overflow-y: auto; }
+        .form-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 0.75rem; }
+        .booking-form-side h1 { font-size: 2.8rem; font-weight: 300; margin-bottom: 0.5rem; }
+        .booking-form-side > p { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; }
+
+        .form-section { margin-bottom: 2.5rem; }
+        .form-section-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--muted); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        [data-theme="dark"] .form-section-title { border-color: rgba(255,255,255,0.06); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+        .form-group label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+        .form-group input, .form-group select, .form-group textarea {
+            background: var(--card); border: 1px solid rgba(0,0,0,0.1); padding: 0.85rem 1rem;
+            font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text);
+            transition: border-color 0.3s, box-shadow 0.3s; outline: none; width: 100%;
+        }
+        [data-theme="dark"] .form-group input, [data-theme="dark"] .form-group select, [data-theme="dark"] .form-group textarea { border-color: rgba(255,255,255,0.1); background: #1a1612; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .form-group input.error, .form-group select.error { border-color: #dc2626; }
+        .error-msg { font-size: 0.7rem; color: #dc2626; margin-top: 0.25rem; display: none; }
+        .error-msg.show { display: block; }
+
+        /* ROOM SELECTOR */
+        .room-options { display: flex; flex-direction: column; gap: 0.75rem; }
+        .room-option { border: 1px solid rgba(0,0,0,0.1); padding: 1rem 1.25rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 1rem; }
+        [data-theme="dark"] .room-option { border-color: rgba(255,255,255,0.08); }
+        .room-option:hover { border-color: var(--accent); }
+        .room-option.selected { border-color: var(--accent); background: rgba(201,169,110,0.06); }
+        .room-option input[type="radio"] { accent-color: var(--accent); }
+        .room-option-label { flex: 1; }
+        .room-option-name { font-size: 0.85rem; font-weight: 500; }
+        .room-option-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+        .room-option-price { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--accent); }
+
+        /* SUMMARY */
+        .booking-summary { background: var(--card); border: 1px solid rgba(0,0,0,0.07); padding: 1.5rem; margin-bottom: 2rem; }
+        [data-theme="dark"] .booking-summary { border-color: rgba(255,255,255,0.06); }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; font-size: 0.82rem; border-bottom: 1px solid rgba(0,0,0,0.04); }
+        [data-theme="dark"] .summary-row { border-color: rgba(255,255,255,0.04); }
+        .summary-row:last-child { border-bottom: none; font-weight: 500; font-size: 0.9rem; color: var(--text); }
+        .summary-label { color: var(--muted); }
+        .summary-value { color: var(--text); font-weight: 400; }
+        .summary-total { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--accent); }
+
+        .submit-btn { width: 100%; background: var(--accent); color: #1a1612; border: none; padding: 1.1rem; font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .submit-btn:hover { background: #d4b87a; }
+        .submit-note { text-align: center; font-size: 0.7rem; color: var(--muted); margin-top: 1rem; }
+
+        /* SUCCESS */
+        .success-screen { display: none; text-align: center; padding: 4rem 2rem; }
+        .success-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+        .success-screen h3 { font-size: 2rem; font-weight: 300; margin-bottom: 0.75rem; }
+        .success-screen p { font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .booking-layout { grid-template-columns: 1fr; }
+            .booking-visual { display: none; }
+            .booking-form-side { padding: 6rem 1.5rem 3rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">GMT <span>Sorabora</span></a>
+    <ul class="nav-links">
+        <li><a href="/rooms">Rooms</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+</nav>
+
+<div class="booking-layout">
+    <!-- VISUAL PANEL -->
+    <div class="booking-visual">
+        <div class="booking-visual-eyebrow">G.M.T. Sorabora</div>
+        <h2>Begin Your<br><em style="color: var(--accent);">Sorabora</em><br>Experience.</h2>
+        <p>Reserve your lakefront retreat in Mahiyanganaya. We'll confirm your booking within 24 hours.</p>
+        <div class="trust-items">
+            <div class="trust-item"><span class="trust-icon">✓</span> Non-refundable rate — no cancellation charge applies</div>
+            <div class="trust-item"><span class="trust-icon">✓</span> Check-in: 2:00 PM – 9:00 PM · Check-out: 11:00 AM</div>
+            <div class="trust-item"><span class="trust-icon">✓</span> Free English breakfast included daily</div>
+            <div class="trust-item"><span class="trust-icon">✓</span> Complimentary welcome tea & fresh fruit</div>
+        </div>
+    </div>
+
+    <!-- FORM PANEL -->
+    <div class="booking-form-side">
+        <div id="formWrapper">
+            <p class="form-eyebrow">Reservations</p>
+            <h1>Book Your Stay</h1>
+            <p>Fill in the details below and we'll reserve your room. All fields are required.</p>
+
+            <form id="bookingForm" novalidate>
+                <!-- GUEST INFO -->
+                <div class="form-section">
+                    <div class="form-section-title">Guest Information</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" placeholder="Sahan">
+                            <span class="error-msg" id="firstNameErr">Please enter your first name.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" placeholder="Perera">
+                            <span class="error-msg" id="lastNameErr">Please enter your last name.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="you@example.com">
+                        <span class="error-msg" id="emailErr">Please enter a valid email address.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+94 71 000 0000">
+                        <span class="error-msg" id="phoneErr">Please enter a phone number.</span>
+                    </div>
+                </div>
+
+                <!-- DATES & GUESTS -->
+                <div class="form-section">
+                    <div class="form-section-title">Stay Details</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkIn">Check-in Date</label>
+                            <input type="date" id="checkIn">
+                            <span class="error-msg" id="checkInErr">Please select a check-in date.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkOut">Check-out Date</label>
+                            <input type="date" id="checkOut">
+                            <span class="error-msg" id="checkOutErr">Check-out must be after check-in.</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adults">Adults</label>
+                            <select id="adults">
+                                <option value="1">1 Adult</option>
+                                <option value="2" selected>2 Adults</option>
+                                <option value="3">3 Adults</option>
+                                <option value="4">4 Adults</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="children">Children</label>
+                            <select id="children">
+                                <option value="0" selected>No children</option>
+                                <option value="1">1 Child</option>
+                                <option value="2">2 Children</option>
+                                <option value="3">3 Children</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROOM SELECTION -->
+                <div class="form-section">
+                    <div class="form-section-title">Choose Your Room</div>
+                    <div class="room-options">
+                        <label class="room-option selected">
+                            <input type="radio" name="room" value="lake" data-price="59" checked>
+                            <div class="room-option-label">
+                                <div class="room-option-name">Lake View Suite</div>
+                                <div class="room-option-desc">Private balcony, king bed, lake views</div>
+                            </div>
+                            <div class="room-option-price">$59</div>
+                        </label>
+                        <label class="room-option">
+                            <input type="radio" name="room" value="garden" data-price="59">
+                            <div class="room-option-label">
+                                <div class="room-option-name">Garden Villa</div>
+                                <div class="room-option-desc">Courtyard bathtub, tropical gardens</div>
+                            </div>
+                            <div class="room-option-price">$59</div>
+                        </label>
+                        <label class="room-option">
+                            <input type="radio" name="room" value="heritage" data-price="59">
+                            <div class="room-option-label">
+                                <div class="room-option-name">Heritage Suite</div>
+                                <div class="room-option-desc">Kandyan timber, copper bath, lounge</div>
+                            </div>
+                            <div class="room-option-price">$59</div>
+                        </label>
+                        <label class="room-option">
+                            <input type="radio" name="room" value="forest" data-price="59">
+                            <div class="room-option-label">
+                                <div class="room-option-name">Forest Bungalow</div>
+                                <div class="room-option-desc">Plunge pool, outdoor shower, breakfast included</div>
+                            </div>
+                            <div class="room-option-price">$59</div>
+                        </label>
+                    </div>
+                    <span class="error-msg" id="roomErr" style="margin-top: 0.5rem;">Please select a room.</span>
+                </div>
+
+                <!-- SPECIAL REQUESTS -->
+                <div class="form-section">
+                    <div class="form-section-title">Special Requests <span style="font-weight: 300; text-transform: none; letter-spacing: 0;">(optional)</span></div>
+                    <div class="form-group">
+                        <label for="requests">Dietary needs, accessibility, celebrations, arrival time…</label>
+                        <textarea id="requests" rows="3" placeholder="Let us know how we can make your stay special."></textarea>
+                    </div>
+                </div>
+
+                <!-- BOOKING SUMMARY -->
+                <div class="form-section">
+                    <div class="form-section-title">Booking Summary</div>
+                    <div class="booking-summary">
+                        <div class="summary-row">
+                            <span class="summary-label">Room</span>
+                            <span class="summary-value" id="summaryRoom">Lake View Suite</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Dates</span>
+                            <span class="summary-value" id="summaryDates">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Duration</span>
+                            <span class="summary-value" id="summaryNights">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Total Estimate</span>
+                            <span class="summary-total" id="summaryTotal">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Confirm Reservation →</button>
+                <p class="submit-note">You will receive a confirmation email within 24 hours. Payment on arrival.</p>
+            </form>
+        </div>
+
+        <!-- SUCCESS STATE -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">🌿</div>
+            <h3>Reservation Received!</h3>
+            <p>Thank you for choosing G.M.T. Sorabora. We've received your reservation request and will confirm via email within 24 hours.</p>
+            <p style="margin-top: 1rem;">We look forward to welcoming you to the lake.</p>
+            <a href="/" style="display: inline-block; margin-top: 2rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px;">Return Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').textContent = '☀️'; }
+
+    // SET MIN DATES
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkIn').min = today;
+    document.getElementById('checkOut').min = today;
+
+    // ROOM OPTION SELECTION
+    document.querySelectorAll('.room-option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.room-option').forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+            updateSummary();
+        });
+    });
+
+    // UPDATE SUMMARY
+    function updateSummary() {
+        const selectedRoom = document.querySelector('input[name="room"]:checked');
+        const checkIn = document.getElementById('checkIn').value;
+        const checkOut = document.getElementById('checkOut').value;
+        const roomLabels = { lake: 'Superior Double or Twin Room', garden: 'Deluxe Garden Room', heritage: 'Family Suite', forest: 'Standard Room' };
+
+        if (selectedRoom) {
+            document.getElementById('summaryRoom').textContent = roomLabels[selectedRoom.value] || '—';
+            const price = parseInt(selectedRoom.dataset.price);
+            if (checkIn && checkOut) {
+                const nights = Math.max(0, (new Date(checkOut) - new Date(checkIn)) / 86400000);
+                document.getElementById('summaryDates').textContent = `${checkIn} → ${checkOut}`;
+                document.getElementById('summaryNights').textContent = nights > 0 ? `${nights} night${nights !== 1 ? 's' : ''}` : 'Invalid range';
+                document.getElementById('summaryTotal').textContent = nights > 0 ? `$${price * nights}` : '—';
+            }
+        }
+    }
+    document.getElementById('checkIn').addEventListener('change', updateSummary);
+    document.getElementById('checkOut').addEventListener('change', updateSummary);
+
+    // FORM VALIDATION
+    document.getElementById('bookingForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        let valid = true;
+
+        const fields = [
+            { id: 'firstName', errId: 'firstNameErr', check: v => v.trim().length > 0 },
+            { id: 'lastName', errId: 'lastNameErr', check: v => v.trim().length > 0 },
+            { id: 'email', errId: 'emailErr', check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+            { id: 'phone', errId: 'phoneErr', check: v => v.trim().length > 6 },
+            { id: 'checkIn', errId: 'checkInErr', check: v => v !== '' },
+        ];
+
+        fields.forEach(({ id, errId, check }) => {
+            const el = document.getElementById(id);
+            const err = document.getElementById(errId);
+            const ok = check(el.value);
+            el.classList.toggle('error', !ok);
+            err.classList.toggle('show', !ok);
+            if (!ok) valid = false;
+        });
+
+        const checkIn = document.getElementById('checkIn').value;
+        const checkOut = document.getElementById('checkOut').value;
+        const checkOutEl = document.getElementById('checkOut');
+        const checkOutErr = document.getElementById('checkOutErr');
+        const datesOk = checkOut && new Date(checkOut) > new Date(checkIn);
+        checkOutEl.classList.toggle('error', !datesOk);
+        checkOutErr.classList.toggle('show', !datesOk);
+        if (!datesOk) valid = false;
+
+        if (valid) {
+            document.getElementById('formWrapper').style.display = 'none';
+            document.getElementById('successScreen').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+</script>
+</body>
+</html>

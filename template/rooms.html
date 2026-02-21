@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rooms & Suites | G.M.T. Sorabora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore our lake view suites, garden villas and heritage rooms at G.M.T. Sorabora, Mahiyanganaya.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0a3d2e; --accent: #c9a96e; --bg: #f8f5f0; --text: #1a1612; --muted: #8a7968; --card: #ffffff; }
+        [data-theme="dark"] { --primary: #1a6b50; --accent: #c9a96e; --bg: #0e0c09; --text: #f0ebe3; --muted: #6b5f50; --card: #1a1612; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); transition: background-color 0.4s, color 0.4s; }
+        h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 20px rgba(0,0,0,0.04); transition: all 0.4s; }
+        [data-theme="dark"] nav { border-color: rgba(255,255,255,0.06); }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: 0.05em; color: var(--text); text-decoration: none; }
+        .nav-logo span { font-weight: 300; opacity: 0.55; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .theme-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        [data-theme="dark"] .theme-btn { border-color: rgba(255,255,255,0.2); }
+        .theme-btn:hover { transform: scale(1.1); }
+        .book-btn { background: var(--accent); color: #1a1612; border: none; padding: 0.6rem 1.5rem; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .book-btn:hover { background: #d4b87a; }
+
+        /* PAGE HERO */
+        .page-hero {
+            padding: 10rem 4rem 4rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #0d5c43 100%);
+            color: white; text-align: center;
+        }
+        .page-eyebrow { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .page-hero h1 { font-size: clamp(3rem, 6vw, 5rem); font-weight: 300; line-height: 1.1; }
+        .page-hero p { font-size: 0.95rem; opacity: 0.7; margin-top: 1rem; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.9; }
+
+        /* FILTER BAR */
+        .filter-bar { padding: 2rem 4rem; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; gap: 0.75rem; align-items: center; background: var(--bg); }
+        [data-theme="dark"] .filter-bar { border-color: rgba(255,255,255,0.05); }
+        .filter-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); margin-right: 0.5rem; }
+        .filter-btn { padding: 0.5rem 1.25rem; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; border: 1px solid rgba(0,0,0,0.12); background: none; cursor: pointer; transition: all 0.3s; color: var(--muted); }
+        [data-theme="dark"] .filter-btn { border-color: rgba(255,255,255,0.1); }
+        .filter-btn.active, .filter-btn:hover { background: var(--accent); color: #1a1612; border-color: var(--accent); }
+
+        /* ROOMS */
+        .rooms-section { padding: 4rem; }
+        .rooms-list { display: flex; flex-direction: column; gap: 0; }
+        .room-row { display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        [data-theme="dark"] .room-row { border-color: rgba(255,255,255,0.05); }
+        .room-row:nth-child(even) .room-row-img { order: 2; }
+        .room-row:nth-child(even) .room-row-content { order: 1; }
+        .room-row-img { overflow: hidden; }
+        .room-row-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; display: block; }
+        .room-row:hover .room-row-img img { transform: scale(1.04); }
+        .room-row-content { padding: 4rem; display: flex; flex-direction: column; justify-content: center; background: var(--card); }
+        [data-theme="dark"] .room-row-content { background: var(--card); }
+        .room-tag { display: inline-block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent); border: 1px solid var(--accent); padding: 0.25rem 0.75rem; margin-bottom: 1.25rem; }
+        .room-row-content h3 { font-size: 2.2rem; font-weight: 400; line-height: 1.15; margin-bottom: 1rem; }
+        .room-row-content p { font-size: 0.85rem; color: var(--muted); line-height: 1.9; margin-bottom: 1.5rem; }
+        .room-amenities { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+        .amenity { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); background: var(--bg); padding: 0.35rem 0.75rem; border: 1px solid rgba(0,0,0,0.06); }
+        [data-theme="dark"] .amenity { background: #1a1612; border-color: rgba(255,255,255,0.06); }
+        .room-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.06); }
+        [data-theme="dark"] .room-footer { border-color: rgba(255,255,255,0.06); }
+        .room-price-big { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--text); }
+        .room-price-big small { font-size: 0.75rem; font-family: 'DM Sans', sans-serif; color: var(--muted); }
+        .btn-primary { background: var(--accent); color: #1a1612; border: none; padding: 0.9rem 2rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block; }
+        .btn-primary:hover { background: #d4b87a; transform: translateY(-2px); }
+
+        /* CTA */
+        .cta-strip { background: var(--primary); color: white; padding: 5rem 4rem; text-align: center; }
+        .cta-strip h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; margin-bottom: 1rem; }
+        .cta-strip p { opacity: 0.65; font-size: 0.9rem; margin-bottom: 2.5rem; }
+        .btn-gold { background: var(--accent); color: #1a1612; border: none; padding: 1rem 3rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block; }
+        .btn-gold:hover { background: #d4b87a; transform: translateY(-2px); }
+
+        footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 4rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
+        .footer-brand h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; margin-bottom: 1rem; }
+        .footer-brand p { font-size: 0.8rem; line-height: 1.9; max-width: 280px; }
+        .footer-col h4 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 1.25rem; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .footer-col ul a { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.3s; }
+        .footer-col ul a:hover { color: var(--accent); }
+        .footer-bottom { background: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .page-hero { padding: 8rem 1.5rem 3rem; }
+            .filter-bar { padding: 1.5rem; flex-wrap: wrap; }
+            .rooms-section { padding: 2rem 1.5rem; }
+            .room-row { grid-template-columns: 1fr; min-height: auto; }
+            .room-row:nth-child(even) .room-row-img { order: 0; }
+            .room-row:nth-child(even) .room-row-content { order: 1; }
+            .room-row-img { height: 280px; }
+            .room-row-content { padding: 2rem; }
+            footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+            .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+            .cta-strip { padding: 4rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">GMT <span>Sorabora</span></a>
+    <ul class="nav-links">
+        <li><a href="/rooms" class="active">Rooms</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="book-btn" onclick="window.location.href='/booking'">Book Now</button>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <p class="page-eyebrow">Accommodations</p>
+    <h1>Our Suites &amp; Villas</h1>
+    <p>Each room is a considered space — designed for rest, designed for wonder, designed for you.</p>
+</div>
+
+<div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="filterRooms('all', this)">All Rooms</button>
+    <button class="filter-btn" onclick="filterRooms('lake', this)">Lake View</button>
+    <button class="filter-btn" onclick="filterRooms('garden', this)">Garden</button>
+    <button class="filter-btn" onclick="filterRooms('suite', this)">Suites</button>
+</div>
+
+<section class="rooms-section">
+    <div class="rooms-list">
+
+        <div class="room-row reveal" data-category="lake suite">
+            <div class="room-row-img">
+                <img src="https://picsum.photos/seed/room1/800/600" alt="Superior Double or Twin Room">
+            </div>
+            <div class="room-row-content">
+                <span class="room-tag">Lake View</span>
+                <h3>Lake View Suite</h3>
+                <p>Wake to the shimmering surface of Sorabora Wewa. This suite features a private balcony that cantilevers over the garden, a hand-carved king bed, and rain shower. Evenings here belong to the fireflies.</p>
+                <div class="room-amenities">
+                    <span class="amenity">King Bed</span>
+                    <span class="amenity">Mountain Balcony</span>
+                    <span class="amenity">Free Breakfast</span>
+                    <span class="amenity">AC</span>
+                    <span class="amenity">Free WiFi</span>
+                </div>
+                <div class="room-footer">
+                    <div class="room-price-big">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary">Reserve Suite</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="room-row reveal" data-category="garden">
+            <div class="room-row-img">
+                <img src="https://picsum.photos/seed/room2/800/600" alt="Deluxe Garden Room">
+            </div>
+            <div class="room-row-content">
+                <span class="room-tag">Garden</span>
+                <h3>Garden Villa</h3>
+                <p>Facing the lush garden and surrounding rice fields, this room offers a peaceful retreat steps from the outdoor pool. Peacocks roam the grounds. Free WiFi and breakfast included.</p>
+                <div class="room-amenities">
+                    <span class="amenity">Queen Bed</span>
+                    <span class="amenity">Garden View</span>
+                    <span class="amenity">Pool Access</span>
+                    <span class="amenity">AC</span>
+                    <span class="amenity">Minibar</span>
+                </div>
+                <div class="room-footer">
+                    <div class="room-price-big">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary">Reserve Villa</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="room-row reveal" data-category="lake suite">
+            <div class="room-row-img">
+                <img src="https://picsum.photos/seed/room3/800/600" alt="Family Suite">
+            </div>
+            <div class="room-row-content">
+                <span class="room-tag">Heritage Suite</span>
+                <h3>Heritage Suite</h3>
+                <p>A spacious family-friendly room ideal for groups and families. Balcony access, twin or double bed configuration. Free English breakfast daily and complimentary self-parking on site.</p>
+                <div class="room-amenities">
+                    <span class="amenity">King Bed</span>
+                    <span class="amenity">Seating Lounge</span>
+                    <span class="amenity">Free Breakfast</span>
+                    <span class="amenity">AC</span>
+                    <span class="amenity">Self Parking</span>
+                </div>
+                <div class="room-footer">
+                    <div class="room-price-big">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary">Reserve Suite</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="room-row reveal" data-category="garden">
+            <div class="room-row-img">
+                <img src="https://picsum.photos/seed/room4/800/600" alt="Standard Room">
+            </div>
+            <div class="room-row-content">
+                <span class="room-tag">Garden</span>
+                <h3>Forest Bungalow</h3>
+                <p>A comfortable standard room with garden or pool views. Great value for solo travellers or couples. Includes free WiFi, daily English breakfast, and access to the outdoor pool.</p>
+                <div class="room-amenities">
+                    <span class="amenity">Twin or King</span>
+                    <span class="amenity">Outdoor Pool</span>
+                    <span class="amenity">Garden View</span>
+                    <span class="amenity">Free WiFi</span>
+                    <span class="amenity">Breakfast Included</span>
+                </div>
+                <div class="room-footer">
+                    <div class="room-price-big">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary">Reserve Bungalow</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div class="cta-strip">
+    <h2>Not sure which room is right for you?</h2>
+    <p>Contact us and we'll help you find the perfect match for your stay.</p>
+    <a href="/contact" class="btn-gold">Get in Touch</a>
+</div>
+
+<footer>
+    <div class="footer-brand">
+        <h3>GMT Sorabora</h3>
+        <p>A 12-room lakefront hotel on Sorabora Lake Road, Mahiyanganaya. Outdoor pool, free breakfast, and rated Excellent on Booking.com.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+            <li><a href="/rooms">Rooms & Suites</a></li>
+            <li><a href="/gallery">Gallery</a></li>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+            <li><a href="#">Sorabora Lake Road, Mahiyanganaya, UP 90700</a></li>
+            <li><a href="tel:+94712345678">+94 71 234 5678</a></li>
+            <li><a href="/cdn-cgi/l/email-protection#a6cfc8c0c9e6c1cbd2d5c9d4c7c4c9d4c788c5c9cb"><span class="__cf_email__" data-cfemail="caa3a4aca58aada7beb9a5b8aba8a5b8abe4a9a5a7">[email&#160;protected]</span></a></li>
+        </ul>
+    </div>
+</footer>
+<div class="footer-bottom">
+    <p>© 2025 G.M.T. Sorabora. All rights reserved.</p>
+    <p>Designed by <strong style="color: rgba(255,255,255,0.5);">Typix Studio</strong></p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').textContent = '☀️'; }
+
+    function filterRooms(cat, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.room-row').forEach(row => {
+            const cats = row.dataset.category || '';
+            row.style.display = (cat === 'all' || cats.includes(cat)) ? 'grid' : 'none';
+        });
+    }
+    const revealAll = () => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+                el.classList.add('active');
+            }
+        });
+    };
+    window.addEventListener('scroll', revealAll, { passive: true });
+    revealAll();
+
+</script>
+</body>
+</html>

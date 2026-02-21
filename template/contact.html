@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact | G.M.T. Sorabora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact G.M.T. Sorabora – reach us for bookings, enquiries or directions to our lakefront villa in Mahiyanganaya.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0a3d2e; --accent: #c9a96e; --bg: #f8f5f0; --text: #1a1612; --muted: #8a7968; --card: #ffffff; }
+        [data-theme="dark"] { --primary: #0a3d2e; --accent: #c9a96e; --bg: #0e0c09; --text: #f0ebe3; --muted: #6b5f50; --card: #1a1612; }
+        [data-theme="dark"] body { background-color: #0e0c09; color: #f0ebe3; }
+        [data-theme="dark"] nav { background: #0e0c09; border-color: rgba(255,255,255,0.06); box-shadow: none; }
+        [data-theme="dark"] .theme-btn { border-color: rgba(255,255,255,0.2); }
+        [data-theme="dark"] .page-hero { background: #0e0c09; }
+        [data-theme="dark"] .contact-form-side { background: #0e0c09; }
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea { border-color: rgba(255,255,255,0.1); background: #1a1612; color: #f0ebe3; }
+        [data-theme="dark"] .form-group select option { background: #1a1612; color: #f0ebe3; }
+        [data-theme="dark"] .success-screen { background: #0e0c09; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); transition: background-color 0.4s, color 0.4s; }
+        h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 20px rgba(0,0,0,0.04); }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .nav-logo span { font-weight: 300; opacity: 0.55; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .theme-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .book-btn { background: var(--accent); color: #1a1612; border: none; padding: 0.6rem 1.5rem; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.3s; }
+        .book-btn:hover { background: #d4b87a; }
+
+        /* PAGE HERO */
+        .page-hero { padding: 9rem 4rem 5rem; }
+        .page-eyebrow { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; animation: fadeUp 0.8s ease both; }
+        .page-hero h1 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 300; line-height: 1.05; animation: fadeUp 0.8s ease 0.15s both; }
+        .page-hero p { font-size: 0.9rem; color: var(--muted); max-width: 440px; line-height: 1.9; margin-top: 1.5rem; animation: fadeUp 0.8s ease 0.3s both; }
+
+        /* LAYOUT */
+        .contact-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 0; }
+        .contact-info-side { padding: 4rem; background: var(--primary); color: white; }
+        .contact-info-side h3 { font-size: 1.8rem; font-weight: 300; margin-bottom: 2.5rem; }
+        .info-block { margin-bottom: 2.5rem; }
+        .info-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.35em; color: var(--accent); margin-bottom: 0.6rem; }
+        .info-value { font-size: 0.9rem; line-height: 1.8; opacity: 0.8; }
+        .info-value a { color: inherit; text-decoration: none; transition: opacity 0.3s; }
+        .info-value a:hover { opacity: 1; color: var(--accent); }
+        .hours-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 1rem; margin-top: 0.5rem; }
+        .hours-grid span { font-size: 0.8rem; opacity: 0.7; }
+        .divider-line { height: 1px; background: rgba(255,255,255,0.12); margin: 2.5rem 0; }
+
+        /* FAQ */
+        .faq-block { margin-top: 0; }
+        .faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .faq-question { width: 100%; background: none; border: none; color: white; text-align: left; padding: 1.1rem 0; font-size: 0.82rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Sans', sans-serif; }
+        .faq-answer { font-size: 0.8rem; opacity: 0.65; line-height: 1.8; padding-bottom: 1rem; display: none; }
+        .faq-answer.open { display: block; }
+        .faq-icon { opacity: 0.5; transition: transform 0.3s; }
+        .faq-icon.rotated { transform: rotate(45deg); }
+
+        /* FORM */
+        .contact-form-side { padding: 4rem; background: var(--bg); }
+        .form-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 0.75rem; }
+        .contact-form-side h2 { font-size: 2.2rem; font-weight: 300; margin-bottom: 2rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+        .form-group label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+        .form-group input, .form-group select, .form-group textarea {
+            background: var(--card); border: 1px solid rgba(0,0,0,0.1); padding: 0.85rem 1rem;
+            font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text);
+            transition: border-color 0.3s; outline: none; width: 100%;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .form-group input.error, .form-group select.error, .form-group textarea.error { border-color: #dc2626; }
+        .error-msg { font-size: 0.7rem; color: #dc2626; display: none; }
+        .error-msg.show { display: block; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .submit-btn { width: 100%; background: var(--accent); color: #1a1612; border: none; padding: 1.1rem; font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .submit-btn:hover { background: #d4b87a; }
+
+        /* MAP */
+        .map-section { height: 420px; background: linear-gradient(135deg, #0a3d2e 0%, #0d5c43 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .map-overlay-text { text-align: center; color: white; z-index: 2; position: relative; }
+        .map-overlay-text h3 { font-size: 2rem; font-weight: 300; margin-bottom: 0.75rem; }
+        .map-overlay-text p { font-size: 0.82rem; opacity: 0.65; margin-bottom: 1.75rem; line-height: 1.9; }
+        .map-btn { background: var(--accent); color: #1a1612; border: none; padding: 0.85rem 2rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block; }
+        .map-btn:hover { background: #d4b87a; }
+        .map-bg-dots { position: absolute; inset: 0; opacity: 0.05; background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px; }
+
+        /* SUCCESS */
+        .success-screen { display: none; text-align: center; padding: 4rem 2rem; }
+        .success-icon { font-size: 2.5rem; margin-bottom: 1.25rem; }
+        .success-screen h3 { font-size: 1.8rem; font-weight: 300; margin-bottom: 0.75rem; }
+        .success-screen p { font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
+
+        footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 4rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
+        .footer-brand h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; margin-bottom: 1rem; }
+        .footer-brand p { font-size: 0.8rem; line-height: 1.9; max-width: 280px; }
+        .footer-col h4 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 1.25rem; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .footer-col ul a { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.3s; }
+        .footer-col ul a:hover { color: var(--accent); }
+        .footer-bottom { background: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding: 1.5rem 4rem; display: flex; justify-content: space-between; }
+        .footer-bottom p { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .page-hero { padding: 7rem 1.5rem 3rem; }
+            .contact-layout { grid-template-columns: 1fr; }
+            .contact-info-side { padding: 3rem 1.5rem; }
+            .contact-form-side { padding: 3rem 1.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+            footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+            .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">GMT <span>Sorabora</span></a>
+    <ul class="nav-links">
+        <li><a href="/rooms">Rooms</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="book-btn" onclick="window.location.href='booking.html'">Book Now</button>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <p class="page-eyebrow">Get in Touch</p>
+    <h1>We'd Love to<br><em style="color: var(--accent);">Hear from You.</em></h1>
+    <p>Whether you have a question, a special request, or you're just figuring out if we're right for you — reach out and we'll respond within a few hours.</p>
+</div>
+
+<div class="contact-layout">
+    <!-- INFO PANEL -->
+    <div class="contact-info-side reveal">
+        <h3>Find Us</h3>
+        <div class="info-block">
+            <div class="info-label">Address</div>
+            <div class="info-value">Sorabora Lake Road,<br>Mahiyanganaya, UP 90700,<br>Sri Lanka</div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Phone</div>
+            <div class="info-value"><a href="tel:+94712345678">+94 71 234 5678</a></div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Email</div>
+            <div class="info-value"><a href="/cdn-cgi/l/email-protection#6e070008012e09031a1d011c0f0c011c0f400d0103"><span class="__cf_email__" data-cfemail="91f8fff7fed1f6fce5e2fee3f0f3fee3f0bff2fefc">[email&#160;protected]</span></a></div>
+        </div>
+        <div class="info-block">
+            <div class="info-label">Reception Hours</div>
+            <div class="hours-grid">
+                <span>Check-in</span><span>2:00 PM – 9:00 PM</span>
+                <span>Check-out</span><span>by 11:00 AM</span>
+                <span>Late check-in</span><span>subject to availability</span>
+            </div>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <div>
+            <div class="info-label" style="margin-bottom: 1rem;">Frequently Asked</div>
+            <div class="faq-block">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        What time is check-in?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">Check-in is from 2:00 PM to 9:00 PM. Late check-in (11:30 AM–12:30 PM) can be arranged for an extra charge of LKR 1,500. Express check-in/out is available.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Do you serve meals?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">Yes — free English breakfast is included with every room. We also have an on-site restaurant serving à la carte meals. Guests have praised the food highly.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        How far is the nearest town?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">Samadhi Buddha Statue is 12 min walk. Mahiyangana Temple is 5 min drive. Horabora Wewa is 4 min drive. We can arrange transport on request.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Is parking available?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">Yes, we have secure free parking on-site for all guests.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM PANEL -->
+    <div class="contact-form-side">
+        <div id="formWrapper">
+            <p class="form-eyebrow reveal">Message Us</p>
+            <h2 class="reveal">Send a Message</h2>
+            <form id="contactForm" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Sahan Perera">
+                        <span class="error-msg" id="nameErr">Please enter your name.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="you@email.com">
+                        <span class="error-msg" id="emailErr">Please enter a valid email.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject">
+                        <option value="">Select a topic…</option>
+                        <option>Booking Enquiry</option>
+                        <option>Special Request</option>
+                        <option>Directions & Getting Here</option>
+                        <option>Press & Media</option>
+                        <option>General Question</option>
+                    </select>
+                    <span class="error-msg" id="subjectErr">Please select a subject.</span>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="5" placeholder="Tell us what's on your mind…"></textarea>
+                    <span class="error-msg" id="messageErr">Please write a message.</span>
+                </div>
+                <button type="submit" class="submit-btn reveal">Send Message →</button>
+            </form>
+        </div>
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">🌿</div>
+            <h3>Message Received</h3>
+            <p>Thank you for getting in touch. We'll reply to your message within a few hours.</p>
+            <a href="index.html" style="display: inline-block; margin-top: 2rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px;">Return Home</a>
+        </div>
+    </div>
+</div>
+
+<!-- MAP PLACEHOLDER -->
+<div class="map-section">
+    <div class="map-bg-dots"></div>
+    <div class="map-overlay-text">
+        <h3>Find Us on the Lake</h3>
+        <p>Sorabora Lake Road, Mahiyanganaya, UP 90700<br>Sri Lanka</p>
+        <a href="https://maps.google.com/?q=G.M.T.+Sorabora+Village+Hotel+Mahiyanganaya" target="_blank" rel="noopener" class="map-btn">Open in Google Maps</a>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-brand">
+        <h3>GMT Sorabora</h3>
+        <p>A 12-room lakefront hotel on Sorabora Lake Road, Mahiyanganaya. Outdoor pool, free breakfast, and rated Excellent on Booking.com.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+            <li><a href="/rooms">Rooms & Suites</a></li>
+            <li><a href="/gallery">Gallery</a></li>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/contact" class="active">Contact</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+            <li><a href="#">Sorabora Lake Road, Mahiyanganaya, UP 90700</a></li>
+            <li><a href="tel:+94712345678">+94 71 234 5678</a></li>
+            <li><a href="/cdn-cgi/l/email-protection#f0999e969fb0979d84839f8291929f8291de939f9d"><span class="__cf_email__" data-cfemail="10797e767f50777d64637f6271727f62713e737f7d">[email&#160;protected]</span></a></li>
+        </ul>
+    </div>
+</footer>
+<div class="footer-bottom">
+    <p>© 2025 G.M.T. Sorabora. All rights reserved.</p>
+    <p>Designed by <strong style="color: rgba(255,255,255,0.5);">Typix Studio</strong></p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').textContent = '☀️'; }
+
+    function toggleFaq(btn) {
+        const answer = btn.nextElementSibling;
+        const icon = btn.querySelector('.faq-icon');
+        answer.classList.toggle('open');
+        icon.classList.toggle('rotated');
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        let valid = true;
+        const fields = [
+            { id: 'name', errId: 'nameErr', check: v => v.trim().length > 1 },
+            { id: 'email', errId: 'emailErr', check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+            { id: 'subject', errId: 'subjectErr', check: v => v !== '' },
+            { id: 'message', errId: 'messageErr', check: v => v.trim().length > 5 },
+        ];
+        fields.forEach(({ id, errId, check }) => {
+            const el = document.getElementById(id);
+            const err = document.getElementById(errId);
+            const ok = check(el.value);
+            el.classList.toggle('error', !ok);
+            err.classList.toggle('show', !ok);
+            if (!ok) valid = false;
+        });
+        if (valid) {
+            document.getElementById('formWrapper').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'flex';
+        }
+    });
+
+    // Fix Flask routes
+    const links = document.querySelectorAll('a[href]');
+    links.forEach(a => {
+        if (a.getAttribute('href') === 'booking.html') a.setAttribute('href', '/booking');
+    });
+
+    const revealAll = () => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+                el.classList.add('active');
+            }
+        });
+    };
+    window.addEventListener('scroll', revealAll, { passive: true });
+    revealAll();
+
+</script>
+</body>
+</html>

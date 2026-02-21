@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gallery | G.M.T. Sorabora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Photos of G.M.T. Sorabora – lakefront villa, suites, and grounds in Mahiyanganaya.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0a3d2e; --accent: #c9a96e; --bg: #f8f5f0; --text: #1a1612; --muted: #8a7968; --card: #ffffff; }
+        [data-theme="dark"] { --primary: #1a6b50; --accent: #c9a96e; --bg: #0e0c09; --text: #f0ebe3; --muted: #6b5f50; --card: #1a1612; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); transition: background-color 0.4s, color 0.4s; }
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 20px rgba(0,0,0,0.04); }
+        [data-theme="dark"] nav { border-color: rgba(255,255,255,0.06); }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .nav-logo span { font-weight: 300; opacity: 0.55; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .theme-btn { background: none; border: 1px solid rgba(0,0,0,0.15); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        [data-theme="dark"] .theme-btn { border-color: rgba(255,255,255,0.2); }
+        .book-btn { background: var(--accent); color: #1a1612; border: none; padding: 0.6rem 1.5rem; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.3s; }
+        .book-btn:hover { background: #d4b87a; }
+
+        /* HERO */
+        .page-hero { padding: 9rem 4rem 4rem; text-align: center; }
+        .page-eyebrow { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .page-hero h1 { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 300; }
+        .page-hero p { font-size: 0.88rem; color: var(--muted); max-width: 480px; margin: 1rem auto 0; line-height: 1.9; }
+
+        /* FILTER */
+        .filter-bar { padding: 2rem 4rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+        .filter-btn { padding: 0.5rem 1.5rem; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; border: 1px solid rgba(0,0,0,0.12); background: none; cursor: pointer; transition: all 0.3s; color: var(--muted); }
+        [data-theme="dark"] .filter-btn { border-color: rgba(255,255,255,0.1); }
+        .filter-btn.active, .filter-btn:hover { background: var(--accent); color: #1a1612; border-color: var(--accent); }
+
+        /* MASONRY GRID */
+        .gallery-grid { columns: 3; column-gap: 1rem; padding: 0 4rem 6rem; }
+        .gallery-item { break-inside: avoid; margin-bottom: 1rem; cursor: zoom-in; position: relative; overflow: hidden; display: block; }
+        .gallery-item img { width: 100%; display: block; transition: transform 0.5s ease; }
+        .gallery-item:hover img { transform: scale(1.04); }
+        .gallery-overlay { position: absolute; inset: 0; background: rgba(10,61,46,0); transition: background 0.4s; display: flex; align-items: flex-end; padding: 1.25rem; }
+        .gallery-item:hover .gallery-overlay { background: rgba(10,61,46,0.5); }
+        .gallery-caption { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: white; opacity: 0; transform: translateY(8px); transition: all 0.4s; }
+        .gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+
+        /* LIGHTBOX */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 2rem; }
+        .lightbox.open { display: flex; }
+        .lightbox-inner { position: relative; max-width: 1000px; max-height: 90vh; width: 100%; }
+        .lightbox-inner img { max-width: 100%; max-height: 85vh; object-fit: contain; display: block; margin: 0 auto; }
+        .lightbox-caption { text-align: center; color: rgba(255,255,255,0.55); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 1.5rem; }
+        .lightbox-close { position: absolute; top: -2.5rem; right: 0; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; opacity: 0.6; transition: opacity 0.3s; }
+        .lightbox-close:hover { opacity: 1; }
+        .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; transition: background 0.3s; display: flex; align-items: center; justify-content: center; }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+        .lightbox-prev { left: -3.5rem; }
+        .lightbox-next { right: -3.5rem; }
+
+        footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 4rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
+        .footer-brand h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; margin-bottom: 1rem; }
+        .footer-brand p { font-size: 0.8rem; line-height: 1.9; max-width: 280px; }
+        .footer-col h4 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 1.25rem; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .footer-col ul a { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.3s; }
+        .footer-col ul a:hover { color: var(--accent); }
+        .footer-bottom { background: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding: 1.5rem 4rem; display: flex; justify-content: space-between; }
+        .footer-bottom p { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+
+        .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1024px) { .gallery-grid { columns: 2; } }
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .gallery-grid { columns: 1; padding: 0 1.5rem 4rem; }
+            .filter-bar { padding: 1.5rem; }
+            footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+            .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+            .lightbox-prev { left: 0.5rem; }
+            .lightbox-next { right: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-logo">GMT <span>Sorabora</span></a>
+    <ul class="nav-links">
+        <li><a href="/rooms">Rooms</a></li>
+        <li><a href="/gallery" class="active">Gallery</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="book-btn" onclick="window.location.href='/booking'">Book Now</button>
+    </div>
+</nav>
+
+<div class="page-hero reveal">
+    <p class="page-eyebrow">Visual Journal</p>
+    <h1>The Gallery</h1>
+    <p>Rice fields, peacocks, Sorabora Lake, and the rooms that overlook it all.</p>
+</div>
+
+<div class="filter-bar reveal">
+    <button class="filter-btn active" onclick="filterGallery('all', this)">All</button>
+    <button class="filter-btn" onclick="filterGallery('lake', this)">Lake & Grounds</button>
+    <button class="filter-btn" onclick="filterGallery('rooms', this)">Rooms</button>
+    <button class="filter-btn" onclick="filterGallery('food', this)">Dining</button>
+    <button class="filter-btn" onclick="filterGallery('explore', this)">Explore</button>
+</div>
+
+<div class="gallery-grid" id="galleryGrid">
+
+    <div class="gallery-item" data-cat="lake" data-caption="Sorabora Wewa at Dawn" onclick="openLightbox(0)">
+        <img src="https://picsum.photos/seed/lake1/1920/1080" alt="Lake at dawn">
+        <div class="gallery-overlay"><span class="gallery-caption">Sorabora Wewa at Dawn</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="rooms" data-caption="Lake View Suite" onclick="openLightbox(1)">
+        <img src="https://picsum.photos/seed/room1/800/600" alt="Lake View Suite">
+        <div class="gallery-overlay"><span class="gallery-caption">Lake View Suite</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="lake" data-caption="The Grounds at Sunrise" onclick="openLightbox(2)">
+        <img src="https://picsum.photos/seed/hotel1/1920/1080" alt="Villa grounds">
+        <div class="gallery-overlay"><span class="gallery-caption">The Grounds at Sunrise</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="rooms" data-caption="Heritage Suite Interior" onclick="openLightbox(3)">
+        <img src="https://picsum.photos/seed/room3/800/600" alt="Heritage Suite">
+        <div class="gallery-overlay"><span class="gallery-caption">Heritage Suite Interior</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="food" data-caption="Sri Lankan Breakfast Spread" onclick="openLightbox(4)">
+        <img src="https://picsum.photos/seed/food1/700/500" alt="Breakfast">
+        <div class="gallery-overlay"><span class="gallery-caption">Sri Lankan Breakfast</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="lake" data-caption="Evening on the Lake" onclick="openLightbox(5)">
+        <img src="https://picsum.photos/seed/lake2/1920/800" alt="Lake at evening">
+        <div class="gallery-overlay"><span class="gallery-caption">Evening on the Lake</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="rooms" data-caption="Garden Villa Courtyard" onclick="openLightbox(6)">
+        <img src="https://picsum.photos/seed/room2/800/600" alt="Garden Villa">
+        <div class="gallery-overlay"><span class="gallery-caption">Garden Villa Courtyard</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="explore" data-caption="Vedda Village Visit" onclick="openLightbox(7)">
+        <img src="https://picsum.photos/seed/village1/700/500" alt="Village">
+        <div class="gallery-overlay"><span class="gallery-caption">Vedda Village Excursion</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="food" data-caption="Fresh Catch from the Lake" onclick="openLightbox(8)">
+        <img src="https://picsum.photos/seed/food2/700/500" alt="Food">
+        <div class="gallery-overlay"><span class="gallery-caption">Fresh Catch from the Lake</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="lake" data-caption="Morning Mist on the Water" onclick="openLightbox(9)">
+        <img src="https://picsum.photos/seed/mist1/700/500" alt="Morning mist">
+        <div class="gallery-overlay"><span class="gallery-caption">Morning Mist on the Water</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="rooms" data-caption="Forest Bungalow Exterior" onclick="openLightbox(10)">
+        <img src="https://picsum.photos/seed/room4/800/600" alt="Forest bungalow">
+        <div class="gallery-overlay"><span class="gallery-caption">Forest Bungalow</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="explore" data-caption="Mahiyangana Raja Maha Viharaya" onclick="openLightbox(11)">
+        <img src="https://picsum.photos/seed/temple1/700/500" alt="Temple">
+        <div class="gallery-overlay"><span class="gallery-caption">Mahiyangana Temple Nearby</span></div>
+    </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner">
+        <button class="lightbox-close" onclick="closeLightboxBtn()">✕</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navLightbox(-1)">‹</button>
+        <img id="lightboxImg" src="" alt="">
+        <button class="lightbox-nav lightbox-next" onclick="navLightbox(1)">›</button>
+        <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-brand">
+        <h3>GMT Sorabora</h3>
+        <p>A 12-room lakefront hotel on Sorabora Lake Road, Mahiyanganaya. Outdoor pool, free breakfast, and rated Excellent on Booking.com.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+            <li><a href="/rooms">Rooms & Suites</a></li>
+            <li><a href="/gallery">Gallery</a></li>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+            <li><a href="#">Sorabora Lake Road, Mahiyanganaya, UP 90700</a></li>
+            <li><a href="tel:+94712345678">+94 71 234 5678</a></li>
+            <li><a href="/cdn-cgi/l/email-protection#f1989f979eb1969c85829e8390939e8390df929e9c"><span class="__cf_email__" data-cfemail="71181f171e31161c05021e0310131e03105f121e1c">[email&#160;protected]</span></a></li>
+        </ul>
+    </div>
+</footer>
+<div class="footer-bottom">
+    <p>© 2025 G.M.T. Sorabora. All rights reserved.</p>
+    <p>Designed by <strong style="color: rgba(255,255,255,0.5);">Typix Studio</strong></p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').textContent = '☀️'; }
+
+    // FILTER
+    function filterGallery(cat, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'block' : 'none';
+        });
+    }
+
+    // LIGHTBOX
+    const items = document.querySelectorAll('.gallery-item');
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+        currentIndex = index;
+        showLightboxItem();
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function showLightboxItem() {
+        const item = items[currentIndex];
+        const img = item.querySelector('img');
+        document.getElementById('lightboxImg').src = img.src.replace('w=700', 'w=1200');
+        document.getElementById('lightboxCaption').textContent = item.dataset.caption;
+    }
+    function navLightbox(dir) {
+        currentIndex = (currentIndex + dir + items.length) % items.length;
+        showLightboxItem();
+    }
+    function closeLightboxBtn() {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function closeLightbox(e) {
+        if (e.target === document.getElementById('lightbox')) closeLightboxBtn();
+    }
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightboxBtn();
+        if (e.key === 'ArrowRight') navLightbox(1);
+        if (e.key === 'ArrowLeft') navLightbox(-1);
+    });
+    const revealAll = () => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+                el.classList.add('active');
+            }
+        });
+    };
+    window.addEventListener('scroll', revealAll, { passive: true });
+    revealAll();
+
+</script>
+</body>
+</html>

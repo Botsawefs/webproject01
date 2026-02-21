@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room Management | G.M.T. Sorabora Staff</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a3d2e;
+            --accent:  #c9a96e;
+            --bg:      #f8f5f0;
+            --text:    #1a1612;
+            --muted:   #8a7968;
+            --card:    #ffffff;
+            --border:  rgba(0,0,0,0.08);
+            --success: #16a34a;
+            --danger:  #dc2626;
+            --warning: #d97706;
+        }
+        [data-theme="dark"] {
+            --bg:    #0e0c09;
+            --text:  #f0ebe3;
+            --muted: #6b5f50;
+            --card:  #1a1612;
+            --border:rgba(255,255,255,0.07);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; transition: background 0.3s, color 0.3s; }
+        h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 220px; flex-shrink: 0;
+            background: var(--primary); color: white;
+            display: flex; flex-direction: column;
+            position: fixed; top: 0; left: 0; bottom: 0;
+        }
+        .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 600; }
+        .sidebar-logo-name span { font-weight: 300; opacity: 0.5; }
+        .sidebar-portal { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-top: 0.2rem; }
+        .sidebar-nav { flex: 1; padding: 1rem 0; }
+        .nav-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.3em; color: rgba(255,255,255,0.3); padding: 1rem 1.25rem 0.4rem; }
+        .nav-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.7rem 1.25rem; font-size: 0.78rem; color: rgba(255,255,255,0.6); text-decoration: none; transition: all 0.2s; border: none; background: none; width: 100%; text-align: left; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+        .nav-item:hover { color: white; background: rgba(255,255,255,0.06); }
+        .nav-item.active { color: white; background: rgba(201,169,110,0.15); border-right: 3px solid var(--accent); }
+        .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .back-link { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); text-decoration: none; padding: 0.6rem 0; transition: color 0.2s; }
+        .back-link:hover { color: var(--accent); }
+
+        /* ── MAIN ── */
+        .main { margin-left: 220px; flex: 1; display: flex; flex-direction: column; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 2rem; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+        .topbar h1 { font-size: 1.5rem; font-weight: 400; }
+        .topbar-right { display: flex; gap: 0.75rem; align-items: center; }
+        .theme-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+
+        .page-body { padding: 2rem; }
+
+        /* ── FLASH MESSAGES ── */
+        .flash { padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.82rem; border-left: 3px solid; display: flex; justify-content: space-between; align-items: center; }
+        .flash.success { background: rgba(22,163,74,0.08); border-color: var(--success); color: var(--success); }
+        .flash.error   { background: rgba(220,38,38,0.08); border-color: var(--danger);  color: var(--danger); }
+        .flash-close { background: none; border: none; cursor: pointer; color: inherit; font-size: 1rem; opacity: 0.6; }
+
+        /* ── STAT CARDS ── */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+        .stat { background: var(--card); border: 1px solid var(--border); padding: 1.4rem 1.5rem; }
+        .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--muted); margin-bottom: 0.4rem; }
+        .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 300; line-height: 1; }
+        .stat-sub   { font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; }
+        .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.3rem; }
+
+        /* ── TABS ── */
+        .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.75rem; }
+        .tab { padding: 0.75rem 1.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; border: none; background: none; color: var(--muted); font-family: 'DM Sans', sans-serif; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab:hover { color: var(--text); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── ROOM GRID ── */
+        .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+        .room-card { background: var(--card); border: 1px solid var(--border); overflow: hidden; transition: box-shadow 0.3s; }
+        .room-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .room-card-header { padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border); }
+        .room-number { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; line-height: 1; }
+        .room-type-tag { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); }
+        .room-card-body { padding: 1rem 1.25rem; }
+        .room-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 500; margin-bottom: 0.75rem; }
+        .status-available { color: var(--success); }
+        .status-occupied  { color: var(--danger); }
+        .status-maintenance { color: var(--warning); }
+        .room-guest { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem; }
+        .room-checkout { font-size: 0.75rem; color: var(--muted); }
+        .room-card-footer { padding: 0.75rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+        .btn-edit { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 0.5rem; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .btn-edit:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-del  { background: rgba(220,38,38,0.07); border: 1px solid transparent; color: var(--danger); padding: 0.5rem 0.75rem; font-size: 0.65rem; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .btn-del:hover { background: rgba(220,38,38,0.15); }
+
+        /* ── TABLE ── */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); overflow: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); text-align: left; padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--bg); font-weight: 400; }
+        td { padding: 0.9rem 1.25rem; font-size: 0.82rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0,0,0,0.015); }
+        [data-theme="dark"] tr:hover td { background: rgba(255,255,255,0.02); }
+        .badge { display: inline-block; padding: 0.2rem 0.65rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; }
+        .badge-available   { background: rgba(22,163,74,0.1);   color: var(--success); }
+        .badge-occupied    { background: rgba(220,38,38,0.1);   color: var(--danger); }
+        .badge-maintenance { background: rgba(217,119,6,0.1);   color: var(--warning); }
+
+        /* ── FORMS ── */
+        .form-card { background: var(--card); border: 1px solid var(--border); padding: 1.75rem; }
+        .form-card h3 { font-size: 1.3rem; font-weight: 400; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+        .form-group label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+        .form-group input, .form-group select {
+            background: var(--bg); border: 1px solid var(--border);
+            padding: 0.75rem 0.9rem; font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem; color: var(--text); outline: none;
+            transition: border-color 0.25s; width: 100%;
+        }
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select { background: #120f0b; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .btn-primary { background: var(--accent); color: #1a1612; border: none; padding: 0.8rem 2rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .btn-primary:hover { background: #d4b87a; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 0.8rem 1.5rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .btn-danger:hover { background: #b91c1c; }
+        .form-hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
+
+        /* ── MODAL ── */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: var(--card); width: 100%; max-width: 500px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+        .modal-head h3 { font-size: 1.3rem; font-weight: 400; }
+        .modal-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); transition: color 0.2s; line-height: 1; }
+        .modal-close:hover { color: var(--danger); }
+        .modal-body { padding: 1.5rem; }
+        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.75rem; }
+        .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.75rem 1.5rem; font-size: 0.7rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+        .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+        /* ── CONFIRM ── */
+        .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+        .confirm-overlay.open { display: flex; }
+        .confirm-box { background: var(--card); padding: 2rem; max-width: 360px; width: 90%; }
+        .confirm-box h4 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.75rem; }
+        .confirm-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.7; }
+        .confirm-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+
+        /* ── EMPTY STATE ── */
+        .empty { text-align: center; padding: 3rem; color: var(--muted); }
+        .empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.4; }
+
+        /* ── LEGEND ── */
+        .legend { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--muted); }
+
+        @media (max-width: 800px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="sidebar-logo-name">GMT <span>Sorabora</span></div>
+        <div class="sidebar-portal">Room Management</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-label">Dashboard</div>
+        <button class="nav-item active" onclick="switchTab('rooms', this)">🛏 Rooms</button>
+        <button class="nav-item" onclick="switchTab('bookings', this)">📋 Bookings</button>
+        <button class="nav-item" onclick="switchTab('add', this)">➕ Add Room</button>
+        <div class="nav-label">Staff</div>
+        <a href="/dashboard" class="nav-item" style="text-decoration:none;">📊 Staff Portal</a>
+    </nav>
+    <div class="sidebar-footer">
+        <a href="/" class="back-link">← Back to Website</a>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <div class="topbar">
+        <h1>Room Management</h1>
+        <div class="topbar-right">
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </div>
+
+    <div class="page-body">
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    <span>{{ message }}</span>
+                    <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Total Rooms</div>
+                <div class="stat-value">{{ total }}</div>
+                <div class="stat-sub">In the system</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Occupied</div>
+                <div class="stat-value" style="color: var(--danger);">{{ occupied }}</div>
+                <div class="stat-sub"><span class="dot" style="background:var(--danger)"></span>Currently checked in</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Available</div>
+                <div class="stat-value" style="color: var(--success);">{{ available }}</div>
+                <div class="stat-sub"><span class="dot" style="background:var(--success)"></span>Ready for guests</div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab active" id="tab-rooms" onclick="switchTab('rooms', this)">🛏 All Rooms</button>
+            <button class="tab" id="tab-bookings" onclick="switchTab('bookings', this)">📋 Bookings</button>
+            <button class="tab" id="tab-add" onclick="switchTab('add', this)">➕ Add Room</button>
+        </div>
+
+        <!-- ── PANEL: ROOMS GRID ── -->
+        <div class="tab-panel active" id="panel-rooms">
+            <div class="legend">
+                <span class="legend-item"><span class="dot" style="background:var(--success)"></span> Available</span>
+                <span class="legend-item"><span class="dot" style="background:var(--danger)"></span> Occupied</span>
+                <span class="legend-item"><span class="dot" style="background:var(--warning)"></span> Maintenance</span>
+            </div>
+
+            {% if rooms %}
+            <div class="room-grid">
+                {% for room in rooms %}
+                <div class="room-card">
+                    <div class="room-card-header">
+                        <div>
+                            <div class="room-number">{{ room['room_number'] }}</div>
+                        </div>
+                        <div class="room-type-tag">{{ room['room_type'] }}</div>
+                    </div>
+                    <div class="room-card-body">
+                        <div class="room-status status-{{ room['status']|lower }}">
+                            <span class="dot" style="background:{% if room['status'] == 'Available' %}var(--success){% elif room['status'] == 'Occupied' %}var(--danger){% else %}var(--warning){% endif %}"></span>
+                            {{ room['status'] }}
+                        </div>
+                        <div class="room-guest">
+                            {% if room['customer_name'] %}
+                                👤 {{ room['customer_name'] }}
+                            {% else %}
+                                <span style="opacity:0.4;">No guest</span>
+                            {% endif %}
+                        </div>
+                        <div class="room-checkout">
+                            {% if room['check_out_date'] %}
+                                🗓 Check-out: {{ room['check_out_date'] }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="room-card-footer">
+                        <button class="btn-edit" onclick="openEditModal(
+                            {{ room['room_number'] }},
+                            '{{ room['room_type'] }}',
+                            '{{ room['status'] }}',
+                            '{{ room['customer_name'] or '' }}',
+                            '{{ room['check_out_date'] or '' }}'
+                        )">Edit</button>
+                        <button class="btn-del" onclick="confirmDelete({{ room['room_number'] }})">✕</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty"><div class="empty-icon">🛏</div><p>No rooms in the system yet. Add one using the tab above.</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ── PANEL: BOOKINGS TABLE ── -->
+        <div class="tab-panel" id="panel-bookings">
+            {% if bookings %}
+            <div class="table-wrap">
+                <table>
+                    <thead><tr>
+                        <th>#</th>
+                        <th>Guest Name</th>
+                        <th>Room Type</th>
+                        <th>Check-in Date</th>
+                    </tr></thead>
+                    <tbody>
+                    {% for b in bookings %}
+                    <tr>
+                        <td style="color:var(--muted);">{{ b['id'] }}</td>
+                        <td>{{ b['name'] }}</td>
+                        <td><span class="badge badge-available">{{ b['room_type'] }}</span></td>
+                        <td>{{ b['check_in'] or '—' }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty"><div class="empty-icon">📋</div><p>No bookings submitted from the website yet.</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ── PANEL: ADD ROOM ── -->
+        <div class="tab-panel" id="panel-add">
+            <div class="form-card" style="max-width: 500px;">
+                <h3>Register a New Room</h3>
+                <form action="/add_room" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="new-room-num">Room Number</label>
+                            <input type="number" id="new-room-num" name="room_number" placeholder="e.g. 105" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-room-type">Room Type</label>
+                            <select id="new-room-type" name="room_type">
+                                <option value="Standard">Standard</option>
+                                <option value="Deluxe">Deluxe</option>
+                                <option value="Suite">Suite</option>
+                                <option value="Family">Family</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="form-hint" style="margin-bottom:1.25rem;">The room will be added as Available by default.</p>
+                    <button type="submit" class="btn-primary">Register Room →</button>
+                </form>
+            </div>
+        </div>
+
+    </div><!-- /page-body -->
+</div><!-- /main -->
+
+<!-- ── EDIT MODAL ── -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Update Room <span id="modalRoomNum"></span></h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="editForm" action="/update_room" method="POST">
+                <input type="hidden" name="room_number" id="editRoomNum">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="status" id="editStatus" onchange="toggleGuestFields(this.value)">
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div id="guestFields">
+                    <div class="form-group">
+                        <label>Guest Name</label>
+                        <input type="text" name="guest_name" id="editGuest" placeholder="Full name of guest">
+                    </div>
+                    <div class="form-group">
+                        <label>Check-out Date</label>
+                        <input type="date" name="check_out_date" id="editCheckout">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" onclick="document.getElementById('editForm').submit()">Save Changes →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── DELETE CONFIRM ── -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <h4>Remove Room?</h4>
+        <p>This will permanently delete the room record from the system. Booking history is unaffected.</p>
+        <div class="confirm-actions">
+            <button class="btn-ghost" onclick="closeConfirm()">Cancel</button>
+            <form id="deleteForm" action="/delete_room" method="POST" style="display:inline;">
+                <input type="hidden" name="room_number" id="deleteRoomNum">
+                <button type="submit" class="btn-danger">Yes, Remove</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── THEME ──
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('rm_theme', isDark ? 'light' : 'dark');
+    }
+    if (localStorage.getItem('rm_theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('themeBtn').textContent = '☀️';
+    }
+
+    // ── TABS ──
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('panel-' + id).classList.add('active');
+        document.getElementById('tab-' + id)?.classList.add('active');
+        if (btn) btn.classList.add('active');
+    }
+
+    // ── EDIT MODAL ──
+    function openEditModal(num, type, status, guest, checkout) {
+        document.getElementById('modalRoomNum').textContent = num;
+        document.getElementById('editRoomNum').value = num;
+        document.getElementById('editStatus').value = status;
+        document.getElementById('editGuest').value = guest;
+        document.getElementById('editCheckout').value = checkout;
+        toggleGuestFields(status);
+        document.getElementById('editModal').classList.add('open');
+    }
+    function closeModal() {
+        document.getElementById('editModal').classList.remove('open');
+    }
+    function toggleGuestFields(status) {
+        document.getElementById('guestFields').style.display =
+            (status === 'Available') ? 'none' : 'block';
+    }
+
+    // ── DELETE CONFIRM ──
+    function confirmDelete(num) {
+        document.getElementById('deleteRoomNum').value = num;
+        document.getElementById('confirmOverlay').classList.add('open');
+    }
+    function closeConfirm() {
+        document.getElementById('confirmOverlay').classList.remove('open');
+    }
+
+    // Close overlays on backdrop click
+    document.getElementById('editModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('editModal')) closeModal();
+    });
+    document.getElementById('confirmOverlay').addEventListener('click', e => {
+        if (e.target === document.getElementById('confirmOverlay')) closeConfirm();
+    });
+
+    // ESC key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+    });
+
+    // Auto-dismiss flash messages after 4s
+    setTimeout(() => {
+        document.querySelectorAll('.flash').forEach(f => f.remove());
+    }, 4000);
+</script>
+</body>
+</html>

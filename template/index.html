@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>G.M.T. Sorabora Village Hotel | Mahiyanganaya, Sri Lanka</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="G.M.T. Sorabora Village Hotel — 12-room lakefront hotel on Sorabora Lake Road, Mahiyanganaya. Outdoor pool, free breakfast, rated Excellent on Booking.com.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a3d2e;
+            --accent: #c9a96e;
+            --bg: #f8f5f0;
+            --text: #1a1612;
+            --muted: #8a7968;
+            --card: #ffffff;
+        }
+        [data-theme="dark"] {
+            --primary: #1a6b50;
+            --accent: #c9a96e;
+            --bg: #0e0c09;
+            --text: #f0ebe3;
+            --muted: #6b5f50;
+            --card: #1a1612;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.4s, color 0.4s;
+        }
+        h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.25rem 3rem;
+            transition: all 0.4s;
+        }
+        nav.scrolled {
+            background: var(--bg);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+        [data-theme="dark"] nav.scrolled { border-color: rgba(255,255,255,0.06); }
+        .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: 0.05em; color: white; transition: color 0.4s; }
+        nav.scrolled .nav-logo { color: var(--text); }
+        .nav-logo span { font-weight: 300; opacity: 0.6; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s; }
+        nav.scrolled .nav-links a { color: var(--muted); }
+        .nav-links a:hover, nav.scrolled .nav-links a:hover { color: var(--accent); }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
+        .theme-btn { background: none; border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        nav.scrolled .theme-btn { border-color: var(--muted); color: var(--text); }
+        .theme-btn:hover { transform: scale(1.1); }
+        .book-btn {
+            background: var(--accent); color: #1a1612;
+            border: none; padding: 0.6rem 1.5rem;
+            font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em;
+            cursor: pointer; transition: all 0.3s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .book-btn:hover { background: #d4b87a; transform: translateY(-1px); }
+
+        /* HERO */
+        .hero {
+            height: 100vh; min-height: 700px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 100%),
+                        url('https://picsum.photos/seed/lake1/1920/1080') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: white; position: relative;
+        }
+        .hero-eyebrow { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.4em; opacity: 0.7; margin-bottom: 1.5rem; animation: fadeUp 1s ease 0.3s both; }
+        .hero h1 { font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 300; line-height: 1; margin-bottom: 1.5rem; animation: fadeUp 1s ease 0.5s both; }
+        .hero h1 em { font-style: italic; color: var(--accent); }
+        .hero-sub { font-size: 1rem; font-weight: 300; opacity: 0.75; max-width: 480px; line-height: 1.8; animation: fadeUp 1s ease 0.7s both; }
+        .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; animation: fadeUp 1s ease 1s both; }
+        .hero-scroll span { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.6; }
+        .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.6)); animation: scrollAnim 2s ease-in-out infinite; }
+
+        /* SECTIONS */
+        .section-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--accent); margin-bottom: 1rem; }
+        .section-title { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 300; line-height: 1.1; color: var(--text); }
+
+        /* ABOUT STRIP */
+        .about-strip { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; gap: 0; padding: 5rem 4rem; border-top: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); }
+        [data-theme="dark"] .about-strip { border-color: rgba(255,255,255,0.06); }
+        .about-strip-divider { background: rgba(0,0,0,0.08); }
+        [data-theme="dark"] .about-strip-divider { background: rgba(255,255,255,0.06); }
+        .about-strip-item { text-align: center; padding: 0 3rem; }
+        .about-strip-item .num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--accent); line-height: 1; }
+        .about-strip-item p { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); margin-top: 0.5rem; }
+
+        /* INTRO */
+        .intro-section { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 600px; }
+        .intro-img { position: relative; overflow: hidden; }
+        .intro-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
+        .intro-img:hover img { transform: scale(1.03); }
+        .intro-content { padding: 6rem 5rem; display: flex; flex-direction: column; justify-content: center; background: var(--card); }
+        [data-theme="dark"] .intro-content { background: var(--card); }
+
+        /* ROOMS PREVIEW */
+        .rooms-preview { padding: 6rem 4rem; background: var(--bg); }
+        .rooms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+        .room-card { background: var(--card); border: 1px solid rgba(0,0,0,0.06); overflow: hidden; transition: transform 0.4s, box-shadow 0.4s; }
+        [data-theme="dark"] .room-card { border-color: rgba(255,255,255,0.06); }
+        .room-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.12); }
+        .room-card img { width: 100%; height: 260px; object-fit: cover; display: block; transition: transform 0.6s; }
+        .room-card:hover img { transform: scale(1.04); }
+        .room-card-body { padding: 1.75rem; }
+        .room-card-body h4 { font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem; }
+        .room-card-body p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
+        .room-price { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: var(--accent); }
+        .room-price small { font-size: 0.7rem; font-family: 'DM Sans', sans-serif; color: var(--muted); }
+
+        /* LAKE SECTION */
+        .lake-section {
+            height: 70vh; min-height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                        url('https://picsum.photos/seed/lake2/1920/800') center/cover no-repeat;
+            display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        .lake-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; font-style: italic; max-width: 700px; line-height: 1.5; }
+        .lake-quote cite { display: block; font-style: normal; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.6; margin-top: 1.5rem; }
+
+        /* REVIEWS */
+        .reviews-section { padding: 6rem 4rem; background: var(--card); }
+        [data-theme="dark"] .reviews-section { background: #120f0b; }
+        .reviews-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+        .google-badge { display: flex; align-items: center; gap: 1rem; background: var(--bg); padding: 1rem 1.5rem; border: 1px solid rgba(0,0,0,0.06); }
+        [data-theme="dark"] .google-badge { background: var(--card); border-color: rgba(255,255,255,0.06); }
+        .stars { color: #f59e0b; font-size: 1rem; }
+        .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .review-card { background: var(--bg); padding: 2rem; border: 1px solid rgba(0,0,0,0.05); }
+        [data-theme="dark"] .review-card { background: var(--card); border-color: rgba(255,255,255,0.04); }
+        .review-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; color: white; margin-bottom: 1rem; }
+        .review-name { font-size: 0.85rem; font-weight: 500; }
+        .review-date { font-size: 0.7rem; color: var(--muted); }
+        .review-stars { color: #f59e0b; font-size: 0.75rem; margin: 0.5rem 0; }
+        .review-text { font-size: 0.82rem; color: var(--muted); line-height: 1.8; font-style: italic; }
+
+        /* FOOTER */
+        footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 4rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
+        .footer-brand h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; margin-bottom: 1rem; }
+        .footer-brand p { font-size: 0.8rem; line-height: 1.9; max-width: 280px; }
+        .footer-col h4 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 1.25rem; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .footer-col ul a { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.3s; }
+        .footer-col ul a:hover { color: var(--accent); }
+        .footer-bottom { background: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { font-size: 0.7rem; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; }
+
+        /* REVEAL ANIMATIONS */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scrollAnim { 0%, 100% { opacity: 0.4; transform: scaleY(0.8); } 50% { opacity: 1; transform: scaleY(1); } }
+
+        /* UTILITY */
+        .link-accent { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px; transition: opacity 0.3s; }
+        .link-accent:hover { opacity: 0.7; }
+        .btn-primary { background: var(--accent); color: #1a1612; border: none; padding: 0.9rem 2.5rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block; }
+        .btn-primary:hover { background: #d4b87a; transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--text); padding: 0.9rem 2.5rem; font-size: 0.7rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block; }
+        .btn-outline:hover { background: var(--text); color: var(--bg); }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .about-strip { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem; }
+            .about-strip-divider { display: none; }
+            .intro-section { grid-template-columns: 1fr; }
+            .intro-content { padding: 3rem 2rem; }
+            .intro-img { height: 350px; }
+            .rooms-grid { grid-template-columns: 1fr; }
+            .reviews-grid { grid-template-columns: 1fr; }
+            .rooms-preview { padding: 4rem 1.5rem; }
+            .reviews-section { padding: 4rem 1.5rem; }
+            .reviews-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+            footer { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem; }
+            .footer-bottom { flex-direction: column; gap: 0.5rem; padding: 1.5rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+    <a href="/" class="nav-logo">GMT <span>Sorabora</span></a>
+    <ul class="nav-links">
+        <li><a href="/rooms">Rooms</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+        <button class="book-btn" onclick="window.location.href='/booking'">Book Now</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <p class="hero-eyebrow" id="greeting">Welcome to Mahiyanganaya</p>
+    <h1>Discover <em>Silence.</em></h1>
+    <p class="hero-sub">Outdoor pool · Free breakfast · Free WiFi · Restaurant · Mahiyanganaya, Sri Lanka</p>
+    <div class="hero-scroll">
+        <div class="scroll-line"></div>
+        <span>Scroll</span>
+    </div>
+</header>
+
+<!-- STATS STRIP -->
+<div class="about-strip">
+    <div class="about-strip-item reveal">
+        <div class="num">4</div>
+        <p>Verified Reviews</p>
+    </div>
+    <div class="about-strip-divider"></div>
+    <div class="about-strip-item reveal reveal-delay-1">
+        <div class="num">8.6</div>
+        <p>Booking.com Score</p>
+    </div>
+    <div class="about-strip-divider"></div>
+    <div class="about-strip-item reveal reveal-delay-2">
+        <div class="num">12</div>
+        <p>Guest Rooms</p>
+    </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-section">
+    <div class="intro-img">
+        <img src="https://picsum.photos/seed/hotel2/900/700" alt="Villa grounds" loading="lazy">
+    </div>
+    <div class="intro-content reveal">
+        <p class="section-eyebrow">Our Philosophy</p>
+        <h2 class="section-title" style="margin-bottom: 1.5rem;">A Sanctuary Built<br><em>for You.</em></h2>
+        <p style="font-size: 0.9rem; color: var(--muted); line-height: 1.9; margin-bottom: 2rem;">We believe true luxury isn't about gilded fixtures — it's the gold of sunrise over the lake, the silence of ancient trees, and the comfort of a place that feels like home from the moment you arrive.</p>
+        <p style="font-size: 0.9rem; color: var(--muted); line-height: 1.9; margin-bottom: 2.5rem;">12-room hotel on Sorabora Lake Road, Mahiyanganaya. Surrounded by rice fields, wildlife and peacocks — rated Excellent on Booking.com.</p>
+        <a href="/about" class="link-accent">Discover our story</a>
+    </div>
+</div>
+
+<!-- ROOMS PREVIEW -->
+<section class="rooms-preview">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.5rem;">
+        <div>
+            <p class="section-eyebrow reveal">Accommodations</p>
+            <h2 class="section-title reveal">Your Private Villa</h2>
+        </div>
+        <a href="/rooms" class="link-accent reveal" style="margin-bottom: 0.5rem;">View all rooms</a>
+    </div>
+    <div class="rooms-grid">
+        <div class="room-card reveal">
+            <img src="https://picsum.photos/seed/room1/800/600" alt="Lake View Suite">
+            <div class="room-card-body">
+                <h4>Superior Double or Twin Room</h4>
+                <p>Balcony with mountain view, sleeps 4. Free breakfast included every morning.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="room-price">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.65rem;">Reserve</a>
+                </div>
+            </div>
+        </div>
+        <div class="room-card reveal reveal-delay-1">
+            <img src="https://picsum.photos/seed/room2/800/600" alt="Garden Villa">
+            <div class="room-card-body">
+                <h4>Deluxe Garden Room</h4>
+                <p>Peaceful garden-facing room with views of rice fields and surrounding wilderness.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="room-price">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.65rem;">Reserve</a>
+                </div>
+            </div>
+        </div>
+        <div class="room-card reveal reveal-delay-2">
+            <img src="https://picsum.photos/seed/room3/800/600" alt="Heritage Suite">
+            <div class="room-card-body">
+                <h4>Family Room</h4>
+                <p>Spacious room ideal for families and groups, with free WiFi and private balcony access.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="room-price">$59 <small>/ night</small></div>
+                    <a href="/booking" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.65rem;">Reserve</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LAKE FULL-BLEED -->
+<div class="lake-section">
+    <div>
+        <p class="lake-quote">"The lake does not rush. It simply holds the sky, reflects the world, and remains."</p>
+        <p style="font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; opacity: 0.55; margin-top: 1.5rem; font-family: 'DM Sans', sans-serif;">Sorabora Wewa, Mahiyanganaya</p>
+    </div>
+</div>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+    <div class="reviews-header reveal">
+        <div>
+            <p class="section-eyebrow">Guest Voices</p>
+            <h2 class="section-title">What Guests Say</h2>
+        </div>
+        <div class="google-badge">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Booking.com_logo.svg/1200px-Booking.com_logo.svg.png" alt="Booking.com" style="height: 22px; filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(1500%) hue-rotate(196deg);">
+            <div>
+                <div class="stars">★★★★<span style="opacity:0.3">★</span></div>
+                <p style="font-size: 0.8rem; font-weight: 500; margin-top: 0.2rem;">8.6 / 10 <span style="font-weight: 300; color: var(--muted);">Excellent (4 reviews)</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="reviews-grid">
+        <div class="review-card reveal">
+            <div class="review-avatar" style="background: #0a3d2e;">D</div>
+            <div class="review-name">Don</div>
+            <div class="review-date">February 2025 · Verified</div>
+            <div class="review-stars">★★★★★ <span style="font-size:0.68rem;color:var(--accent);">10/10 Exceptional</span></div>
+            <p class="review-text">"Surrounded by beautiful rice fields, wilderness and peacocks — this is an ideal place for those who seek rest and respite. The hotel staff was amazingly nice. My meals à la carte were delicious."</p>
+        </div>
+        <div class="review-card reveal reveal-delay-1">
+            <div class="review-avatar" style="background: #1e40af;">M</div>
+            <div class="review-name">Mark</div>
+            <div class="review-date">August 2025 · Verified</div>
+            <div class="review-stars">★★★★<span style="opacity:0.3">★</span> <span style="font-size:0.68rem;color:var(--accent);">8/10 Very Good</span></div>
+            <p class="review-text">"Particularly suited to families and groups. A great property for what you pay in this area of Sri Lanka."</p>
+        </div>
+        <div class="review-card reveal reveal-delay-2">
+            <div class="review-avatar" style="background: #713f12;">V</div>
+            <div class="review-name">Vishan</div>
+            <div class="review-date">November 2025 · Verified</div>
+            <div class="review-stars">★★★<span style="opacity:0.3">★★</span> <span style="font-size:0.68rem;color:var(--accent);">6/10 Good</span></div>
+            <p class="review-text">"It's an OK property that fits the price. The most inconvenient was the smell in the bathroom. Rest were in par with what you pay."</p>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-brand">
+        <h3>GMT Sorabora</h3>
+        <p>A lakefront retreat beside the ancient Sorabora Wewa, offering quiet luxury in the heart of Sri Lanka's Uva Province.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+            <li><a href="/rooms">Rooms & Suites</a></li>
+            <li><a href="/gallery">Gallery</a></li>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+            <li><a href="#">Sorabora Lake Road, Mahiyanganaya, UP 90700</a></li>
+            <li><a href="tel:+94712345678">+94 71 234 5678</a></li>
+            <li><a href="/cdn-cgi/l/email-protection#8be2e5ede4cbece6fff8e4f9eae9e4f9eaa5e8e4e6"><span class="__cf_email__" data-cfemail="80e9eee6efc0e7edf4f3eff2e1e2eff2e1aee3efed">[email&#160;protected]</span></a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Staff Management</h4>
+        <ul>
+            <li><a href="/staff">Administration</a></li>
+            <li><a href="/dashboard">Operations Management</a></li>
+            <li><a href="/premises_management">Cleaning Department portal</a></li>
+            <li><a href="#">Chef: Ms. Kumari</a></li>
+        </ul>
+            
+</footer>
+<div class="footer-bottom">
+    <p>© 2025 G.M.T. Sorabora. All rights reserved.</p>
+    <p>Designed by <strong style="color: rgba(255,255,255,0.5);">Typix Studio</strong></p>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // THEME
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+        document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('themeBtn').textContent = '☀️';
+    }
+
+    // GREETING
+    const h = new Date().getHours();
+    const g = document.getElementById('greeting');
+    if (h < 12) g.textContent = 'Good Morning from Mahiyanganaya';
+    else if (h < 18) g.textContent = 'Good Afternoon from Mahiyanganaya';
+    else g.textContent = 'Good Evening from Mahiyanganaya';
+
+    // NAVBAR SCROLL
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+    const revealAll = () => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+                el.classList.add('active');
+            }
+        });
+    };
+    window.addEventListener('scroll', revealAll, { passive: true });
+    revealAll();
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Portal | G.M.T. Sorabora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- No meta description intentionally - keep this page off search engines -->
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a3d2e;
+            --accent: #c9a96e;
+            --bg: #f8f5f0;
+            --text: #1a1612;
+            --muted: #8a7968;
+            --card: #ffffff;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --warning: #d97706;
+            --border: rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] {
+            --primary: #0a3d2e;
+            --accent: #c9a96e;
+            --bg: #0e0c09;
+            --text: #f0ebe3;
+            --muted: #6b5f50;
+            --card: #1a1612;
+            --border: rgba(255,255,255,0.07);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; min-height: 100vh; }
+        h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; }
+
+        /* ── LOGIN SCREEN ── */
+        #loginScreen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .login-box {
+            background: var(--card);
+            padding: 3rem; width: 100%; max-width: 420px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+        }
+        .login-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--primary); margin-bottom: 0.25rem; }
+        .login-logo span { font-weight: 300; opacity: 0.5; }
+        .login-subtitle { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--muted); margin-bottom: 2.5rem; }
+        .login-title { font-size: 1.9rem; font-weight: 300; margin-bottom: 2rem; }
+        .login-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+        .login-field label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+        .login-field input {
+            background: var(--bg); border: 1px solid var(--border);
+            padding: 0.85rem 1rem; font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem; color: var(--text); outline: none; transition: border-color 0.3s;
+        }
+        .login-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,169,110,0.12); }
+        .login-field input.shake { animation: shake 0.4s ease; border-color: var(--danger); }
+        .login-error { font-size: 0.72rem; color: var(--danger); margin-bottom: 1rem; min-height: 1rem; }
+        .login-btn {
+            width: 100%; background: var(--accent); color: #1a1612; border: none;
+            padding: 0.95rem; font-size: 0.72rem; font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+        }
+        .login-btn:hover { background: #d4b87a; }
+        .login-hint { font-size: 0.68rem; color: var(--muted); margin-top: 1.5rem; text-align: center; opacity: 0.6; }
+
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+        /* ── APP SHELL ── */
+        #app { display: none; min-height: 100vh; }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+            background: var(--primary); color: white; display: flex; flex-direction: column;
+            z-index: 100; transition: transform 0.3s;
+        }
+        .sidebar-logo { padding: 1.75rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; }
+        .sidebar-logo-text span { font-weight: 300; opacity: 0.5; }
+        .sidebar-portal { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent); margin-top: 0.25rem; }
+        .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+        .nav-section-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.35em; color: rgba(255,255,255,0.3); padding: 1rem 1.5rem 0.5rem; }
+        .nav-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.75rem 1.5rem; font-size: 0.78rem; cursor: pointer;
+            color: rgba(255,255,255,0.6); transition: all 0.2s; border: none; background: none;
+            width: 100%; text-align: left; font-family: 'DM Sans', sans-serif;
+        }
+        .nav-item:hover { color: white; background: rgba(255,255,255,0.06); }
+        .nav-item.active { color: white; background: rgba(201,169,110,0.15); border-right: 3px solid var(--accent); }
+        .nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+        .sidebar-footer { padding: 1.25rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-user { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .user-avatar { width: 34px; height: 34px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: #1a1612; }
+        .user-name { font-size: 0.78rem; color: white; }
+        .user-role { font-size: 0.62rem; color: rgba(255,255,255,0.4); }
+        .logout-btn { width: 100%; background: rgba(255,255,255,0.06); border: none; color: rgba(255,255,255,0.5); padding: 0.6rem; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .logout-btn:hover { background: rgba(220,38,38,0.15); color: #fca5a5; }
+
+        /* MAIN CONTENT */
+        .main { margin-left: 240px; min-height: 100vh; }
+        .topbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.25rem 2.5rem; background: var(--card);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;
+        }
+        .topbar-title { font-size: 1.4rem; font-weight: 400; }
+        .topbar-actions { display: flex; gap: 0.75rem; align-items: center; }
+        .theme-toggle { background: none; border: 1px solid var(--border); border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .page-content { padding: 2rem 2.5rem; }
+
+        /* PANELS */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* STAT CARDS */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 1.5rem; }
+        .stat-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.5rem; }
+        .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; line-height: 1; }
+        .stat-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
+        .stat-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.35rem; }
+
+        /* TABLE */
+        .table-card { background: var(--card); border: 1px solid var(--border); overflow: hidden; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+        .table-header h3 { font-size: 1.2rem; font-weight: 400; }
+        .search-input {
+            background: var(--bg); border: 1px solid var(--border); padding: 0.6rem 1rem;
+            font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text);
+            outline: none; width: 220px; transition: border-color 0.3s;
+        }
+        .search-input:focus { border-color: var(--accent); }
+        table { width: 100%; border-collapse: collapse; }
+        th { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); text-align: left; padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg); font-weight: 400; }
+        td { padding: 1rem 1.5rem; font-size: 0.82rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0,0,0,0.015); }
+        [data-theme="dark"] tr:hover td { background: rgba(255,255,255,0.02); }
+        .emp-name { font-weight: 500; }
+        .emp-role { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+        .avatar-cell { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: white; flex-shrink: 0; }
+        .td-flex { display: flex; align-items: center; gap: 0.9rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 2px; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+        .badge-active { background: rgba(22,163,74,0.1); color: #16a34a; }
+        .badge-leave { background: rgba(217,119,6,0.1); color: #d97706; }
+        .badge-inactive { background: rgba(0,0,0,0.07); color: var(--muted); }
+        [data-theme="dark"] .badge-inactive { background: rgba(255,255,255,0.07); }
+        .action-btns { display: flex; gap: 0.5rem; }
+        .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.65rem; font-family: 'DM Sans', sans-serif; border: none; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.1em; }
+        .btn-edit { background: var(--bg); border: 1px solid var(--border); color: var(--muted); }
+        .btn-edit:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-del { background: rgba(220,38,38,0.07); border: 1px solid transparent; color: #dc2626; }
+        .btn-del:hover { background: rgba(220,38,38,0.15); }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: var(--card); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.3); }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border); }
+        .modal-head h3 { font-size: 1.4rem; font-weight: 400; }
+        .modal-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); transition: color 0.2s; }
+        .modal-close:hover { color: var(--danger); }
+        .modal-body { padding: 1.5rem; }
+        .modal-footer { padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.75rem; }
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-grp { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+        .form-grp label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+        .form-grp input, .form-grp select {
+            background: var(--bg); border: 1px solid var(--border); padding: 0.75rem 0.9rem;
+            font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text);
+            outline: none; transition: border-color 0.3s; width: 100%;
+        }
+        .form-grp input:focus, .form-grp select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .btn-primary { background: var(--accent); color: #1a1612; border: none; padding: 0.75rem 2rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .btn-primary:hover { background: #d4b87a; }
+        .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.75rem 1.5rem; font-size: 0.7rem; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+        .btn-add { background: var(--accent); color: #1a1612; border: none; padding: 0.65rem 1.5rem; font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif; }
+        .btn-add:hover { background: #d4b87a; }
+
+        /* SCHEDULE */
+        .schedule-grid { display: grid; grid-template-columns: 120px repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 1.5rem; }
+        .sch-header { background: var(--bg); padding: 0.75rem 0.5rem; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); text-align: center; }
+        .sch-name { background: var(--card); padding: 0.75rem 1rem; font-size: 0.78rem; display: flex; align-items: center; }
+        .sch-cell { background: var(--card); padding: 0.5rem; text-align: center; min-height: 52px; display: flex; align-items: center; justify-content: center; }
+        .shift-badge { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.5rem; cursor: pointer; transition: all 0.2s; border: none; font-family: 'DM Sans', sans-serif; width: 100%; }
+        .shift-morning { background: rgba(22,163,74,0.1); color: #16a34a; }
+        .shift-morning:hover { background: rgba(22,163,74,0.2); }
+        .shift-evening { background: rgba(99,102,241,0.1); color: #6366f1; }
+        .shift-evening:hover { background: rgba(99,102,241,0.2); }
+        .shift-off { background: var(--bg); color: var(--muted); }
+        .shift-off:hover { background: rgba(0,0,0,0.06); }
+
+        /* PAYROLL */
+        .payroll-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+        .pay-card { background: var(--card); border: 1px solid var(--border); padding: 1.5rem; }
+        .pay-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.5rem; }
+        .pay-value { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; }
+        .pay-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; }
+
+        /* NOTICE */
+        .notice-list { display: flex; flex-direction: column; gap: 1rem; }
+        .notice-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.25rem 1.5rem; }
+        .notice-card.urgent { border-left-color: var(--danger); }
+        .notice-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .notice-title { font-size: 0.9rem; font-weight: 500; }
+        .notice-date { font-size: 0.7rem; color: var(--muted); }
+        .notice-body { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+        .notice-author { font-size: 0.68rem; color: var(--muted); margin-top: 0.75rem; opacity: 0.7; }
+
+        /* TOAST */
+        .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: white; padding: 1rem 1.5rem; font-size: 0.8rem; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.4s; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: #16a34a; }
+        .toast.error { background: var(--danger); }
+
+        /* CONFIRM DIALOG */
+        .confirm-dialog { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; align-items: center; justify-content: center; }
+        .confirm-dialog.open { display: flex; }
+        .confirm-box { background: var(--card); padding: 2rem; max-width: 380px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .confirm-box h4 { font-size: 1.3rem; font-weight: 400; margin-bottom: 0.75rem; }
+        .confirm-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.7; }
+        .confirm-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+        .btn-confirm-del { background: var(--danger); color: white; border: none; padding: 0.7rem 1.5rem; font-size: 0.7rem; cursor: pointer; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 0.12em; transition: all 0.2s; }
+        .btn-confirm-del:hover { background: #b91c1c; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+        .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+        .empty-state p { font-size: 0.85rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .payroll-summary { grid-template-columns: 1fr 1fr; }
+            .form-row-2 { grid-template-columns: 1fr; }
+            .schedule-grid { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LOGIN SCREEN
+═══════════════════════════════════ -->
+<div id="loginScreen">
+    <div class="login-box">
+        <div class="login-logo">GMT <span>Sorabora</span></div>
+        <div class="login-subtitle">Staff Portal</div>
+        <h2 class="login-title">Sign In</h2>
+        <div class="login-field">
+            <label for="loginUser">Username</label>
+            <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username">
+        </div>
+        <div class="login-field">
+            <label for="loginPass">Password</label>
+            <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password">
+        </div>
+        <div class="login-error" id="loginError"></div>
+        <button class="login-btn" onclick="attemptLogin()">Sign In →</button>
+        <p class="login-hint">Restricted area. Authorised staff only.<br>Default: admin / gmt2025</p>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════
+     APP
+═══════════════════════════════════ -->
+<div id="app">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-text">GMT <span>Sorabora</span></div>
+            <div class="sidebar-portal">Staff Portal</div>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <button class="nav-item active" onclick="showPanel('dashboard', this)">
+                <span class="nav-icon">📊</span> Dashboard
+            </button>
+            <button class="nav-item" onclick="showPanel('employees', this)">
+                <span class="nav-icon">👥</span> Employees
+            </button>
+            <div class="nav-section-label">Management</div>
+            <button class="nav-item" onclick="showPanel('schedule', this)">
+                <span class="nav-icon">📅</span> Schedule
+            </button>
+            <button class="nav-item" onclick="showPanel('payroll', this)">
+                <span class="nav-icon">💰</span> Payroll
+            </button>
+            <button class="nav-item" onclick="showPanel('notices', this)">
+                <span class="nav-icon">📌</span> Notices
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div class="user-name">Admin</div>
+                    <div class="user-role">Manager</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <h2 class="topbar-title" id="pageTitle">Dashboard</h2>
+            <div class="topbar-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <!-- ── DASHBOARD ── -->
+            <div class="panel active" id="panel-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Staff</div>
+                        <div class="stat-value" id="stat-total">—</div>
+                        <div class="stat-sub">Registered employees</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">On Duty Today</div>
+                        <div class="stat-value" id="stat-active">—</div>
+                        <div class="stat-sub"><span class="stat-indicator" style="background:#16a34a"></span>Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">On Leave</div>
+                        <div class="stat-value" id="stat-leave">—</div>
+                        <div class="stat-sub"><span class="stat-indicator" style="background:#d97706"></span>Currently away</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Monthly Payroll</div>
+                        <div class="stat-value" id="stat-payroll">—</div>
+                        <div class="stat-sub">Estimated total</div>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <table>
+                        <thead><tr>
+                            <th>Employee</th>
+                            <th>Action</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr></thead>
+                        <tbody id="activityLog">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── EMPLOYEES ── -->
+            <div class="panel" id="panel-employees">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>All Employees</h3>
+                        <div style="display:flex;gap:0.75rem;align-items:center;">
+                            <input type="text" class="search-input" placeholder="Search staff…" oninput="searchEmployees(this.value)">
+                            <button class="btn-add" onclick="openAddModal()">+ Add Employee</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead><tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Contact</th>
+                            <th>Salary</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr></thead>
+                        <tbody id="employeeTableBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="empEmpty" style="display:none;">
+                        <div class="empty-icon">👥</div>
+                        <p>No employees found. Add your first team member.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── SCHEDULE ── -->
+            <div class="panel" id="panel-schedule">
+                <div class="table-card" style="padding: 1.5rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                        <div>
+                            <h3 style="font-size:1.3rem;">Weekly Schedule</h3>
+                            <p style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Click any shift to toggle. Changes auto-save.</p>
+                        </div>
+                        <div id="weekLabel" style="font-size:0.75rem;color:var(--muted);"></div>
+                    </div>
+                    <div class="schedule-grid" id="scheduleGrid"></div>
+                </div>
+            </div>
+
+            <!-- ── PAYROLL ── -->
+            <div class="panel" id="panel-payroll">
+                <div class="payroll-summary">
+                    <div class="pay-card">
+                        <div class="pay-label">Total Monthly</div>
+                        <div class="pay-value" id="pay-total">—</div>
+                        <div class="pay-sub">Gross payroll estimate</div>
+                    </div>
+                    <div class="pay-card">
+                        <div class="pay-label">Average Salary</div>
+                        <div class="pay-value" id="pay-avg">—</div>
+                        <div class="pay-sub">Per employee</div>
+                    </div>
+                    <div class="pay-card">
+                        <div class="pay-label">Active Staff</div>
+                        <div class="pay-value" id="pay-count">—</div>
+                        <div class="pay-sub">Receiving payment</div>
+                    </div>
+                </div>
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Payroll Summary</h3>
+                        <span style="font-size:0.72rem;color:var(--muted);">All amounts in USD/month</span>
+                    </div>
+                    <table>
+                        <thead><tr>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Base Salary</th>
+                            <th>Status</th>
+                            <th>Payment Status</th>
+                        </tr></thead>
+                        <tbody id="payrollTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── NOTICES ── -->
+            <div class="panel" id="panel-notices">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+                    <div>
+                        <h3 style="font-size:1.5rem;font-weight:300;">Staff Notices</h3>
+                        <p style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Internal announcements for the team</p>
+                    </div>
+                    <button class="btn-add" onclick="openNoticeModal()">+ Post Notice</button>
+                </div>
+                <div class="notice-list" id="noticeList"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ADD / EDIT EMPLOYEE MODAL -->
+<div class="modal-overlay" id="empModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3 id="modalTitle">Add Employee</h3>
+            <button class="modal-close" onclick="closeModal('empModal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="empId">
+            <div class="form-row-2">
+                <div class="form-grp">
+                    <label>First Name</label>
+                    <input type="text" id="empFirst" placeholder="Sahan">
+                </div>
+                <div class="form-grp">
+                    <label>Last Name</label>
+                    <input type="text" id="empLast" placeholder="Perera">
+                </div>
+            </div>
+            <div class="form-row-2">
+                <div class="form-grp">
+                    <label>Role / Position</label>
+                    <input type="text" id="empRole" placeholder="e.g. Head Chef">
+                </div>
+                <div class="form-grp">
+                    <label>Department</label>
+                    <select id="empDept">
+                        <option>Hospitality</option>
+                        <option>Kitchen</option>
+                        <option>Housekeeping</option>
+                        <option>Maintenance</option>
+                        <option>Security</option>
+                        <option>Management</option>
+                        <option>Grounds</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row-2">
+                <div class="form-grp">
+                    <label>Phone</label>
+                    <input type="tel" id="empPhone" placeholder="+94 71 000 0000">
+                </div>
+                <div class="form-grp">
+                    <label>Email</label>
+                    <input type="email" id="empEmail" placeholder="staff@gmtsorabora.com">
+                </div>
+            </div>
+            <div class="form-row-2">
+                <div class="form-grp">
+                    <label>Monthly Salary (USD)</label>
+                    <input type="number" id="empSalary" placeholder="400">
+                </div>
+                <div class="form-grp">
+                    <label>Status</label>
+                    <select id="empStatus">
+                        <option value="active">Active</option>
+                        <option value="leave">On Leave</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-grp">
+                <label>Join Date</label>
+                <input type="date" id="empJoin">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" onclick="closeModal('empModal')">Cancel</button>
+            <button class="btn-primary" onclick="saveEmployee()">Save Employee</button>
+        </div>
+    </div>
+</div>
+
+<!-- POST NOTICE MODAL -->
+<div class="modal-overlay" id="noticeModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Post a Notice</h3>
+            <button class="modal-close" onclick="closeModal('noticeModal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grp">
+                <label>Title</label>
+                <input type="text" id="noticeTitle" placeholder="e.g. Schedule change this weekend">
+            </div>
+            <div class="form-grp">
+                <label>Message</label>
+                <textarea id="noticeBody" rows="4" style="width:100%;background:var(--bg);border:1px solid var(--border);padding:0.75rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--text);outline:none;resize:vertical;" placeholder="Write your notice here…"></textarea>
+            </div>
+            <div class="form-grp">
+                <label>Priority</label>
+                <select id="noticePriority">
+                    <option value="normal">Normal</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" onclick="closeModal('noticeModal')">Cancel</button>
+            <button class="btn-primary" onclick="saveNotice()">Post Notice</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="confirm-dialog" id="confirmDialog">
+    <div class="confirm-box">
+        <h4>Remove Employee?</h4>
+        <p>This will permanently delete the employee record. This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="btn-ghost" onclick="closeConfirm()">Cancel</button>
+            <button class="btn-confirm-del" onclick="confirmDelete()">Yes, Remove</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────
+//  AUTH  (simple password gate)
+//  Change credentials here ↓
+// ──────────────────────────────────
+const CREDENTIALS = { admin: 'gmt2025', manager: 'sorabora1' };
+
+function attemptLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if (CREDENTIALS[user] && CREDENTIALS[user] === pass) {
+        sessionStorage.setItem('staff_auth', user);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.querySelector('.user-name').textContent = user.charAt(0).toUpperCase() + user.slice(1);
+        document.querySelector('.user-avatar').textContent = user.charAt(0).toUpperCase();
+        init();
+    } else {
+        const err = document.getElementById('loginError');
+        err.textContent = 'Incorrect username or password.';
+        ['loginUser','loginPass'].forEach(id => {
+            const el = document.getElementById(id);
+            el.classList.add('shake');
+            setTimeout(() => el.classList.remove('shake'), 500);
+        });
+    }
+}
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
+
+// Check if already authed in session
+if (sessionStorage.getItem('staff_auth')) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    init();
+}
+
+function logout() {
+    sessionStorage.removeItem('staff_auth');
+    location.reload();
+}
+
+// ──────────────────────────────────
+//  DATA
+// ──────────────────────────────────
+const COLORS = ['#0a3d2e','#1e40af','#713f12','#7c2d12','#1e3a5f','#4a044e','#14532d','#1c1917'];
+let employees = JSON.parse(localStorage.getItem('gmt_employees') || 'null') || [
+    { id:1, first:'Chaminda', last:'Silva', role:'Head Chef', dept:'Kitchen', phone:'+94 71 234 5678', email:'chaminda@gmtsorabora.com', salary:550, status:'active', join:'2015-06-01' },
+    { id:2, first:'Dilini', last:'Gunawardena', role:'Head of Hospitality', dept:'Hospitality', phone:'+94 77 345 6789', email:'dilini@gmtsorabora.com', salary:600, status:'active', join:'2015-03-15' },
+    { id:3, first:'Ruwan', last:'Bandara', role:'Housekeeper', dept:'Housekeeping', phone:'+94 76 456 7890', email:'ruwan@gmtsorabora.com', salary:380, status:'active', join:'2017-01-10' },
+    { id:4, first:'Nadeeka', last:'Rathnayake', role:'Sous Chef', dept:'Kitchen', phone:'+94 71 567 8901', email:'nadeeka@gmtsorabora.com', salary:480, status:'leave', join:'2018-08-20' },
+    { id:5, first:'Saman', last:'Jayawardena', role:'Groundskeeper', dept:'Grounds', phone:'+94 72 678 9012', email:'saman@gmtsorabora.com', salary:320, status:'active', join:'2019-04-05' },
+    { id:6, first:'Priya', last:'Fernando', role:'Front Desk', dept:'Hospitality', phone:'+94 75 789 0123', email:'priya@gmtsorabora.com', salary:400, status:'active', join:'2020-11-12' },
+];
+let nextId = Math.max(...employees.map(e=>e.id)) + 1;
+
+let notices = JSON.parse(localStorage.getItem('gmt_notices') || 'null') || [
+    { id:1, title:'Updated Check-in Procedures', body:'From Monday, guests arriving after 6pm must be greeted at the gate. Please ensure the gate light is on.', priority:'normal', author:'Admin', date:'2025-01-15' },
+    { id:2, title:'Generator Maintenance Saturday', body:'The backup generator will be serviced this Saturday 9am–12pm. Inform guests of the scheduled interruption and ensure all essential appliances are on UPS.', priority:'urgent', author:'Manager', date:'2025-01-18' },
+    { id:3, title:'New Breakfast Menu from February', body:'The kitchen team has updated the breakfast menu. Please review the laminated copy in the staff room and ensure all dietary options are communicated to guests.', priority:'normal', author:'Dilini', date:'2025-01-20' },
+];
+let nextNoticeId = 4;
+
+let schedule = JSON.parse(localStorage.getItem('gmt_schedule') || '{}');
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const SHIFTS = ['morning','evening','off'];
+
+function saveData() {
+    localStorage.setItem('gmt_employees', JSON.stringify(employees));
+    localStorage.setItem('gmt_schedule', JSON.stringify(schedule));
+    localStorage.setItem('gmt_notices', JSON.stringify(notices));
+}
+
+// ──────────────────────────────────
+//  INIT
+// ──────────────────────────────────
+function init() {
+    renderDashboard();
+    renderEmployeeTable(employees);
+    renderSchedule();
+    renderPayroll();
+    renderNotices();
+    applyTheme();
+}
+
+// ──────────────────────────────────
+//  NAVIGATION
+// ──────────────────────────────────
+const pageTitles = { dashboard:'Dashboard', employees:'Employees', schedule:'Weekly Schedule', payroll:'Payroll', notices:'Staff Notices' };
+function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('pageTitle').textContent = pageTitles[id];
+}
+
+// ──────────────────────────────────
+//  DASHBOARD
+// ──────────────────────────────────
+function renderDashboard() {
+    const total = employees.length;
+    const active = employees.filter(e => e.status === 'active').length;
+    const leave = employees.filter(e => e.status === 'leave').length;
+    const payroll = employees.filter(e => e.status !== 'inactive').reduce((s,e) => s + (e.salary||0), 0);
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-active').textContent = active;
+    document.getElementById('stat-leave').textContent = leave;
+    document.getElementById('stat-payroll').textContent = '$' + payroll.toLocaleString();
+
+    const log = document.getElementById('activityLog');
+    const recent = [...employees].sort(() => Math.random()-0.5).slice(0,5);
+    const actions = ['Clocked in','Completed shift','Updated profile','Leave approved','Shift swapped'];
+    log.innerHTML = recent.map((e,i) => `
+        <tr>
+            <td><div class="td-flex">
+                <div class="avatar-cell" style="background:${COLORS[e.id % COLORS.length]}">${e.first[0]}</div>
+                <div><div class="emp-name">${e.first} ${e.last}</div><div class="emp-role">${e.role}</div></div>
+            </div></td>
+            <td style="font-size:0.8rem;">${actions[i % actions.length]}</td>
+            <td style="font-size:0.78rem;color:var(--muted);">Today</td>
+            <td><span class="badge badge-${e.status}">${e.status}</span></td>
+        </tr>`).join('');
+}
+
+// ──────────────────────────────────
+//  EMPLOYEES
+// ──────────────────────────────────
+function renderEmployeeTable(list) {
+    const tbody = document.getElementById('employeeTableBody');
+    const empty = document.getElementById('empEmpty');
+    if (!list.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    tbody.innerHTML = list.map(e => `
+        <tr>
+            <td><div class="td-flex">
+                <div class="avatar-cell" style="background:${COLORS[e.id % COLORS.length]}">${e.first[0]}</div>
+                <div><div class="emp-name">${e.first} ${e.last}</div><div class="emp-role">${e.role}</div></div>
+            </div></td>
+            <td style="font-size:0.8rem;">${e.dept}</td>
+            <td style="font-size:0.78rem;color:var(--muted);">${e.phone}<br>${e.email}</td>
+            <td style="font-size:0.82rem;">$${e.salary}<small style="color:var(--muted)">/mo</small></td>
+            <td><span class="badge badge-${e.status}">${e.status}</span></td>
+            <td><div class="action-btns">
+                <button class="btn-sm btn-edit" onclick="openEditModal(${e.id})">Edit</button>
+                <button class="btn-sm btn-del" onclick="askDelete(${e.id})">Remove</button>
+            </div></td>
+        </tr>`).join('');
+}
+
+function searchEmployees(q) {
+    const filtered = employees.filter(e =>
+        (e.first+' '+e.last+e.role+e.dept).toLowerCase().includes(q.toLowerCase())
+    );
+    renderEmployeeTable(filtered);
+}
+
+let editingId = null;
+function openAddModal() {
+    editingId = null;
+    document.getElementById('modalTitle').textContent = 'Add Employee';
+    ['empFirst','empLast','empRole','empPhone','empEmail','empSalary','empId','empJoin'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('empDept').value = 'Hospitality';
+    document.getElementById('empStatus').value = 'active';
+    openModal('empModal');
+}
+function openEditModal(id) {
+    const e = employees.find(x => x.id === id);
+    if (!e) return;
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'Edit Employee';
+    document.getElementById('empId').value = e.id;
+    document.getElementById('empFirst').value = e.first;
+    document.getElementById('empLast').value = e.last;
+    document.getElementById('empRole').value = e.role;
+    document.getElementById('empDept').value = e.dept;
+    document.getElementById('empPhone').value = e.phone;
+    document.getElementById('empEmail').value = e.email;
+    document.getElementById('empSalary').value = e.salary;
+    document.getElementById('empStatus').value = e.status;
+    document.getElementById('empJoin').value = e.join;
+    openModal('empModal');
+}
+function saveEmployee() {
+    const first = document.getElementById('empFirst').value.trim();
+    const last  = document.getElementById('empLast').value.trim();
+    if (!first || !last) { showToast('Name is required', 'error'); return; }
+    const emp = {
+        id: editingId || nextId++,
+        first, last,
+        role:   document.getElementById('empRole').value.trim() || 'Staff',
+        dept:   document.getElementById('empDept').value,
+        phone:  document.getElementById('empPhone').value.trim(),
+        email:  document.getElementById('empEmail').value.trim(),
+        salary: parseInt(document.getElementById('empSalary').value) || 0,
+        status: document.getElementById('empStatus').value,
+        join:   document.getElementById('empJoin').value,
+    };
+    if (editingId) {
+        employees = employees.map(e => e.id === editingId ? emp : e);
+        showToast('Employee updated successfully', 'success');
+    } else {
+        employees.push(emp);
+        showToast('Employee added successfully', 'success');
+    }
+    saveData();
+    renderEmployeeTable(employees);
+    renderDashboard();
+    renderPayroll();
+    renderSchedule();
+    closeModal('empModal');
+}
+
+let deleteTargetId = null;
+function askDelete(id) {
+    deleteTargetId = id;
+    document.getElementById('confirmDialog').classList.add('open');
+}
+function closeConfirm() {
+    deleteTargetId = null;
+    document.getElementById('confirmDialog').classList.remove('open');
+}
+function confirmDelete() {
+    employees = employees.filter(e => e.id !== deleteTargetId);
+    saveData();
+    renderEmployeeTable(employees);
+    renderDashboard();
+    renderPayroll();
+    closeConfirm();
+    showToast('Employee removed', 'error');
+}
+
+// ──────────────────────────────────
+//  SCHEDULE
+// ──────────────────────────────────
+function renderSchedule() {
+    const grid = document.getElementById('scheduleGrid');
+    const now = new Date();
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
+    document.getElementById('weekLabel').textContent = 'Week of ' + monday.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+
+    let html = `<div class="sch-header">Employee</div>`;
+    DAYS.forEach(d => html += `<div class="sch-header">${d}</div>`);
+
+    employees.filter(e => e.status !== 'inactive').forEach(e => {
+        html += `<div class="sch-name">${e.first} ${e.last[0]}.</div>`;
+        DAYS.forEach(d => {
+            const key = `${e.id}_${d}`;
+            const shift = schedule[key] || 'morning';
+            html += `<div class="sch-cell">
+                <button class="shift-badge shift-${shift}" onclick="toggleShift(${e.id},'${d}',this)">
+                    ${shift === 'morning' ? '☀ AM' : shift === 'evening' ? '🌙 PM' : '—'}
+                </button></div>`;
+        });
+    });
+    grid.innerHTML = html;
+}
+function toggleShift(empId, day, btn) {
+    const key = `${empId}_${day}`;
+    const cur = schedule[key] || 'morning';
+    const next = SHIFTS[(SHIFTS.indexOf(cur) + 1) % SHIFTS.length];
+    schedule[key] = next;
+    btn.className = `shift-badge shift-${next}`;
+    btn.textContent = next === 'morning' ? '☀ AM' : next === 'evening' ? '🌙 PM' : '—';
+    saveData();
+}
+
+// ──────────────────────────────────
+//  PAYROLL
+// ──────────────────────────────────
+function renderPayroll() {
+    const active = employees.filter(e => e.status !== 'inactive');
+    const total = active.reduce((s,e) => s + e.salary, 0);
+    const avg = active.length ? Math.round(total / active.length) : 0;
+    document.getElementById('pay-total').textContent = '$' + total.toLocaleString();
+    document.getElementById('pay-avg').textContent = '$' + avg.toLocaleString();
+    document.getElementById('pay-count').textContent = active.length;
+
+    const payStatuses = ['Paid','Pending','Paid','Paid','Pending','Paid'];
+    document.getElementById('payrollTableBody').innerHTML = employees.map((e,i) => `
+        <tr>
+            <td><div class="td-flex">
+                <div class="avatar-cell" style="background:${COLORS[e.id % COLORS.length]}">${e.first[0]}</div>
+                <div><div class="emp-name">${e.first} ${e.last}</div><div class="emp-role">${e.role}</div></div>
+            </div></td>
+            <td style="font-size:0.8rem;">${e.dept}</td>
+            <td style="font-size:0.9rem;">$${e.salary}</td>
+            <td><span class="badge badge-${e.status}">${e.status}</span></td>
+            <td><span class="badge ${payStatuses[i%2==='0'?0:1]==='Paid'?'badge-active':'badge-leave'}" style="background:${i%2===0?'rgba(22,163,74,0.1)':'rgba(217,119,6,0.1)'}; color:${i%2===0?'#16a34a':'#d97706'};">${i%2===0?'Paid':'Pending'}</span></td>
+        </tr>`).join('');
+}
+
+// ──────────────────────────────────
+//  NOTICES
+// ──────────────────────────────────
+function renderNotices() {
+    const list = document.getElementById('noticeList');
+    if (!notices.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">📌</div><p>No notices yet.</p></div>'; return; }
+    list.innerHTML = notices.slice().reverse().map(n => `
+        <div class="notice-card ${n.priority==='urgent'?'urgent':''}">
+            <div class="notice-meta">
+                <span class="notice-title">${n.title}</span>
+                <div style="display:flex;gap:0.75rem;align-items:center;">
+                    <span class="notice-date">${n.date}</span>
+                    <button onclick="deleteNotice(${n.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.75rem;" title="Delete">✕</button>
+                </div>
+            </div>
+            <p class="notice-body">${n.body}</p>
+            <p class="notice-author">Posted by ${n.author} ${n.priority==='urgent'?'· <span style="color:var(--danger);">URGENT</span>':''}</p>
+        </div>`).join('');
+}
+function openNoticeModal() { openModal('noticeModal'); }
+function saveNotice() {
+    const title = document.getElementById('noticeTitle').value.trim();
+    const body = document.getElementById('noticeBody').value.trim();
+    if (!title || !body) { showToast('Title and message are required', 'error'); return; }
+    notices.push({
+        id: nextNoticeId++,
+        title, body,
+        priority: document.getElementById('noticePriority').value,
+        author: sessionStorage.getItem('staff_auth') || 'Admin',
+        date: new Date().toISOString().split('T')[0]
+    });
+    saveData();
+    renderNotices();
+    document.getElementById('noticeTitle').value = '';
+    document.getElementById('noticeBody').value = '';
+    closeModal('noticeModal');
+    showToast('Notice posted', 'success');
+}
+function deleteNotice(id) {
+    notices = notices.filter(n => n.id !== id);
+    saveData();
+    renderNotices();
+    showToast('Notice removed', 'error');
+}
+
+// ──────────────────────────────────
+//  HELPERS
+// ──────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+let toastTimer;
+function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// THEME
+function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+    document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+function applyTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme','dark');
+        document.getElementById('themeBtn').textContent = '☀️';
+    }
+}
+
+// ESC closes modals
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+        closeConfirm();
+    }
+});
+</script>
+</body>
+</html>
