@@ -4,10 +4,10 @@ import os
 
 # ── App setup ──────────────────────────────────────────────────────────────
 app = Flask(__name__)
-# The secret key is required to encrypt "sessions" (the login wristband)
+# The secret key is required for sessions (logins)
 app.secret_key = 'gmt_sorabora_secret_2025'
 
-# Absolute path so DB is found regardless of where Flask is launched from
+# PythonAnywhere requires absolute paths to find your database file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH  = os.path.join(BASE_DIR, 'mydata.db')
 
@@ -20,8 +20,7 @@ def get_db_connection():
 def is_logged_in():
     return session.get('logged_in') == True
 
-
-# ── Public pages (No Login Required) ───────────────────────────────────────
+# ── Public pages ───────────────────────────────────────────────────────────
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -46,7 +45,6 @@ def contact():
 def staff():
     return render_template('staff.html')
 
-
 # ── Gatekeeper: Simple Login ───────────────────────────────────────────────
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -54,7 +52,6 @@ def login():
         user = request.form.get('username')
         pw   = request.form.get('password')
         
-        # Simple hardcoded credentials as requested
         if user == 'staff' and pw == 'sorabora2025':
             session['logged_in'] = True
             flash('Access Authorized. Welcome back.', 'success')
@@ -69,7 +66,6 @@ def logout():
     session.clear()
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
-
 
 # ── Public booking ─────────────────────────────────────────────────────────
 @app.route('/booking', methods=['GET', 'POST'])
@@ -91,16 +87,21 @@ def booking():
         return render_template('booking.html', submitted=True)
     return render_template('booking.html', submitted=False)
 
-
-# ── Staff: Room Management (PROTECTED) ─────────────────────────────────────
+# ── Staff: Room Management ─────────────────────────────────────────────────
 @app.route('/dashboard')
 def dashboard():
     if not is_logged_in():
         return redirect(url_for('login'))
         
     conn     = get_db_connection()
-    rooms    = conn.execute('SELECT * FROM room_status ORDER BY room_number').fetchall()
-    bookings = conn.execute('SELECT * FROM bookings ORDER BY id DESC').fetchall()
+    # Check if tables exist before querying to avoid crash
+    try:
+        rooms    = conn.execute('SELECT * FROM room_status ORDER BY room_number').fetchall()
+        bookings = conn.execute('SELECT * FROM bookings ORDER BY id DESC').fetchall()
+    except sqlite3.OperationalError:
+        conn.close()
+        return "Database tables not found. Please run the setup script."
+        
     conn.close()
     
     total     = len(rooms)
@@ -113,18 +114,7 @@ def dashboard():
         total=total, occupied=occupied, available=available
     )
 
-
-# ── Staff: Premises Management (PROTECTED) ──────────────────────────────────
-@app.route('/premises_management')
-def premises():
-    if not is_logged_in():
-        return redirect(url_for('login'))
-        
-    # You can eventually fetch maintenance logs or stock from the DB here
-    return render_template('premises_management.html')
-
-
-# ── Update / Add / Delete Actions (All PROTECTED) ──────────────────────────
+# ── Staff: Actions ──────────────────────────────────────────────────────────
 @app.route('/update_room', methods=['POST'])
 def update_room():
     if not is_logged_in(): return redirect(url_for('login'))
@@ -134,14 +124,6 @@ def update_room():
     status    = request.form.get('status')
     check_out = request.form.get('check_out_date', '')
     
-    if not room_num:
-        flash('Room number is required.', 'error')
-        return redirect(url_for('dashboard'))
-        
-    if status == 'Available':
-        guest = ''
-        check_out = ''
-        
     conn = get_db_connection()
     conn.execute(
         'UPDATE room_status SET status=?, customer_name=?, check_out_date=? WHERE room_number=?',
@@ -149,50 +131,34 @@ def update_room():
     )
     conn.commit()
     conn.close()
-    flash(f'Room {room_num} updated successfully.', 'success')
+    flash(f'Room {room_num} updated.', 'success')
     return redirect(url_for('dashboard'))
-
 
 @app.route('/add_room', methods=['POST'])
 def add_room():
     if not is_logged_in(): return redirect(url_for('login'))
-    
     room_num  = request.form.get('room_number')
     room_type = request.form.get('room_type')
     
-    if not room_num:
-        flash('Room number is required.', 'error')
-        return redirect(url_for('dashboard'))
-        
     conn = get_db_connection()
-    if conn.execute('SELECT 1 FROM room_status WHERE room_number=?', (room_num,)).fetchone():
-        conn.close()
-        flash(f'Room {room_num} already exists.', 'error')
-        return redirect(url_for('dashboard'))
-        
-    conn.execute(
-        'INSERT INTO room_status (room_number, room_type, status) VALUES (?, ?, ?)',
-        (room_num, room_type, 'Available')
-    )
+    conn.execute('INSERT INTO room_status (room_number, room_type, status) VALUES (?, ?, ?)',
+                 (room_num, room_type, 'Available'))
     conn.commit()
     conn.close()
-    flash(f'Room {room_num} ({room_type}) added.', 'success')
     return redirect(url_for('dashboard'))
-
 
 @app.route('/delete_room', methods=['POST'])
 def delete_room():
     if not is_logged_in(): return redirect(url_for('login'))
-    
     room_num = request.form.get('room_number')
     conn = get_db_connection()
     conn.execute('DELETE FROM room_status WHERE room_number=?', (room_num,))
     conn.commit()
     conn.close()
-    flash(f'Room {room_num} removed.', 'success')
     return redirect(url_for('dashboard'))
 
-
-# At the very bottom of app.py
+# ── Execution ──────────────────────────────────────────────────────────────
+# PythonAnywhere uses the 'application' variable in the WSGI file.
+# This block allows you to still test locally by running 'python app.py'.
 if __name__ == "__main__":
     app.run(debug=True)
